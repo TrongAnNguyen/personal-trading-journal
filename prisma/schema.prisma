@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String?
+  settings  Json?     @default("{}")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  accounts  Account[]
+
+  @@map("users")
+}
+
+model Account {
+  id             String   @id @default(uuid())
+  userId         String
+  name           String
+  initialBalance Decimal  @db.Decimal(18, 2)
+  currency       String   @default("USD")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trades         Trade[]
+
+  @@map("accounts")
+}
+
+model Trade {
+  id             String          @id @default(uuid())
+  accountId      String
+  symbol         String
+  assetClass     AssetClass      @default(CRYPTO)
+  side           TradeSide       @default(LONG)
+  entryPrice     Decimal         @db.Decimal(18, 8)
+  exitPrice      Decimal?        @db.Decimal(18, 8)
+  quantity       Decimal         @db.Decimal(18, 8)
+  fees           Decimal?        @default(0) @db.Decimal(18, 8)
+  stopLoss       Decimal?        @db.Decimal(18, 8)
+  takeProfit     Decimal?        @db.Decimal(18, 8)
+  status         TradeStatus     @default(OPEN)
+  entryTime      DateTime        @default(now())
+  exitTime       DateTime?
+  emotionEntry   Emotion?
+  emotionExit    Emotion?
+  notes          String?
+  lessonsLearned String?
+  pnl            Decimal?        @db.Decimal(18, 8)
+  riskReward     Decimal?        @db.Decimal(5, 2)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  attachments    Attachment[]
+  checklist      ChecklistItem[]
+  tags           TradeTag[]
+  account        Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+  @@index([status])
+  @@index([symbol])
+  @@index([entryTime])
+  @@map("trades")
+}
+
+model Tag {
+  id     String     @id @default(uuid())
+  name   String     @unique
+  type   TagType
+  color  String?    @default("#6366f1")
+  trades TradeTag[]
+
+  @@map("tags")
+}
+
+model TradeTag {
+  tradeId String
+  tagId   String
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  trade   Trade  @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+
+  @@id([tradeId, tagId])
+  @@map("trade_tags")
+}
+
+model Attachment {
+  id       String            @id @default(uuid())
+  tradeId  String
+  imageUrl String
+  context  AttachmentContext @default(ENTRY)
+  caption  String?
+  trade    Trade             @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+
+  @@map("attachments")
+}
+
+model ChecklistItem {
+  id      String  @id @default(uuid())
+  tradeId String
+  text    String
+  checked Boolean @default(false)
+  trade   Trade   @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+
+  @@map("checklist_items")
+}
+
+model ChecklistTemplate {
+  id    String   @id @default(uuid())
+  name  String
+  items String[]
+
+  @@map("checklist_templates")
+}
+
+enum AssetClass {
+  CRYPTO
+  STOCKS
+  FOREX
+  FUTURES
+  OPTIONS
+}
+
+enum TradeSide {
+  LONG
+  SHORT
+}
+
+enum TradeStatus {
+  OPEN
+  CLOSED
+}
+
+enum Emotion {
+  NEUTRAL
+  ANXIOUS
+  OVERCONFIDENT
+  FEARFUL
+  GREEDY
+  DISCIPLINED
+  FOMO
+  REVENGE
+}
+
+enum TagType {
+  STRATEGY
+  MISTAKE
+  SETUP
+  MARKET_CONDITION
+}
+
+enum AttachmentContext {
+  ENTRY
+  EXIT
+  ANALYSIS
+}
