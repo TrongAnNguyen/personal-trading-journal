@@ -326,6 +326,6 @@ export async function createAccount(input: {
     },
   });
 
-  revalidatePath("/accounts");
+  revalidatePath("/dashboard/accounts");
   return account;
 }

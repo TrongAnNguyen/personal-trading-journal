@@ -55,7 +55,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 className="w-full justify-start gap-3"
                 asChild
               >
-                <Link href="/accounts">
+                <Link href="/dashboard/accounts">
                   <Wallet className="h-4 w-4" />
                   Accounts
                 </Link>
@@ -65,7 +65,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 className="w-full justify-start gap-3"
                 asChild
               >
-                <Link href="/tags">
+                <Link href="/dashboard/tags">
                   <Tags className="h-4 w-4" />
                   Tags
                 </Link>
@@ -89,7 +89,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               className="w-full justify-start gap-3"
               asChild
             >
-              <Link href="/settings">
+              <Link href="/dashboard/settings">
                 <Settings className="h-4 w-4" />
                 Settings
               </Link>
