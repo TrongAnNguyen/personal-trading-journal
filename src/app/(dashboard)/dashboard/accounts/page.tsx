@@ -1,4 +1,4 @@
-import { getAccounts } from "@/app/actions";
+import { getAccounts } from "@/lib/actions/accounts";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wallet, TrendingUp, Calendar } from "lucide-react";

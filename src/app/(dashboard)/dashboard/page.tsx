@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getTrades } from "@/app/actions";
+import { getTrades } from "@/lib/actions/trades";
 import { calculateMetrics } from "@/lib/calculations";
 import type { Trade } from "@/types/trade";
 import {

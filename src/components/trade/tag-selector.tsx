@@ -11,7 +11,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -19,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { createTag, getTags } from "@/app/actions";
+import { createTag, getTags } from "@/lib/actions/tags";
 import { TagType, type Tag } from "@/types/trade";
 
 interface TagSelectorProps {

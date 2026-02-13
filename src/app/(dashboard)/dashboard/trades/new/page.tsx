@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TradeForm } from "@/components/trade/trade-form";
 import { ArrowLeft } from "lucide-react";
-import { getAccounts } from "@/app/actions";
+import { getAccounts } from "@/lib/actions/accounts";
 
 export default async function NewTradePage() {
   const accounts = await getAccounts();

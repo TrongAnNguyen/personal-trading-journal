@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Plus, Loader2 } from "lucide-react";
-import { createAccount } from "@/app/actions";
+import { createAccount } from "@/lib/actions/accounts";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 const createAccountSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -44,6 +45,7 @@ type CreateAccountInput = z.infer<typeof createAccountSchema>;
 
 export function CreateAccountDialog() {
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const form = useForm<CreateAccountInput>({
@@ -56,14 +58,16 @@ export function CreateAccountDialog() {
   });
 
   const onSubmit = async (data: CreateAccountInput) => {
-    try {
-      await createAccount(data);
-      setOpen(false);
-      form.reset();
-      router.refresh();
-    } catch (error) {
-      console.error("Failed to create account:", error);
-    }
+    startTransition(async () => {
+      try {
+        await createAccount(data);
+        setOpen(false);
+        form.reset();
+        router.refresh();
+      } catch (error) {
+        console.error("Failed to create account:", error);
+      }
+    });
   };
 
   return (
@@ -149,8 +153,8 @@ export function CreateAccountDialog() {
             </div>
 
             <DialogFooter>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && (
+              <Button type="submit" disabled={isPending}>
+                {isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Create Account

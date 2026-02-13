@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getTrades } from "@/app/actions";
+import { getTrades } from "@/lib/actions/trades";
 import { TradeList } from "@/components/trade/trade-list";
 import { Plus, Filter } from "lucide-react";
 

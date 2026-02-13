@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Plus, Loader2 } from "lucide-react";
-import { createTag } from "@/app/actions";
+import { createTag } from "@/lib/actions/tags";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 const createTagSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -44,6 +45,7 @@ type CreateTagInput = z.infer<typeof createTagSchema>;
 
 export function CreateTagDialog() {
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const form = useForm<CreateTagInput>({
@@ -56,14 +58,16 @@ export function CreateTagDialog() {
   });
 
   const onSubmit = async (data: CreateTagInput) => {
-    try {
-      await createTag(data);
-      setOpen(false);
-      form.reset();
-      router.refresh();
-    } catch (error) {
-      console.error("Failed to create tag:", error);
-    }
+    startTransition(async () => {
+      try {
+        await createTag(data);
+        setOpen(false);
+        form.reset();
+        router.refresh();
+      } catch (error) {
+        console.error("Failed to create tag:", error);
+      }
+    });
   };
 
   return (
@@ -145,8 +149,8 @@ export function CreateTagDialog() {
             />
 
             <DialogFooter>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && (
+              <Button type="submit" disabled={isPending}>
+                {isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Create Tag

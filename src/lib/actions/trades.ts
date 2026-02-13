@@ -14,10 +14,6 @@ import { calculatePnL, calculateRiskReward } from "@/lib/calculations";
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-// ============================================================
-// CREATE TRADE
-// ============================================================
-
 export async function createTrade(input: CreateTradeInput) {
   const supabase = await createSupabaseServerClient();
   const {
@@ -69,14 +65,9 @@ export async function createTrade(input: CreateTradeInput) {
   return { success: true, trade };
 }
 
-// ============================================================
-// CLOSE TRADE
-// ============================================================
-
 export async function closeTrade(tradeId: string, input: CloseTradeInput) {
   const validated = closeTradeSchema.parse(input);
 
-  // Get the existing trade for PnL calculation
   const existingTrade = await prisma.trade.findUnique({
     where: { id: tradeId },
   });
@@ -124,14 +115,9 @@ export async function closeTrade(tradeId: string, input: CloseTradeInput) {
   return { success: true, trade };
 }
 
-// ============================================================
-// UPDATE TRADE
-// ============================================================
-
 export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
   const validated = updateTradeSchema.parse(input);
 
-  // If exitPrice provided, calculate PnL
   let pnl: number | null = null;
   let riskReward: number | null = null;
 
@@ -205,10 +191,6 @@ export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
   return { success: true, trade };
 }
 
-// ============================================================
-// DELETE TRADE
-// ============================================================
-
 export async function deleteTrade(tradeId: string) {
   await prisma.trade.delete({
     where: { id: tradeId },
@@ -219,10 +201,6 @@ export async function deleteTrade(tradeId: string) {
 
   return { success: true };
 }
-
-// ============================================================
-// GET TRADES
-// ============================================================
 
 export async function getTrades(
   accountId?: string,
@@ -271,77 +249,4 @@ export async function getTrade(tradeId: string) {
   });
 
   return trade;
-}
-
-// ============================================================
-// TAGS
-// ============================================================
-
-export async function getTags() {
-  return prisma.tag.findMany({
-    orderBy: { name: "asc" },
-  });
-}
-
-export async function createTag(input: {
-  name: string;
-  type: string;
-  color?: string;
-}) {
-  const tag = await prisma.tag.create({
-    data: {
-      name: input.name,
-      type: input.type as "STRATEGY" | "MISTAKE" | "SETUP" | "MARKET_CONDITION",
-      color: input.color,
-    },
-  });
-
-  return tag;
-}
-
-// ============================================================
-// ACCOUNTS
-// ============================================================
-
-export async function getAccounts() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
-
-  return prisma.account.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
-  });
-}
-
-export async function createAccount(input: {
-  name: string;
-  initialBalance: number;
-  currency: string;
-}) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
-
-  const account = await prisma.account.create({
-    data: {
-      userId: user.id,
-      name: input.name,
-      initialBalance: input.initialBalance,
-      currency: input.currency,
-    },
-  });
-
-  revalidatePath("/dashboard/accounts");
-  return account;
 }

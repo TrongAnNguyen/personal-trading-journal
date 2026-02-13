@@ -1,4 +1,4 @@
-import { getTags } from "@/app/actions";
+import { getTags } from "@/lib/actions/tags";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tags } from "lucide-react";
