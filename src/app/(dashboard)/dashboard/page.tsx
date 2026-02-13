@@ -16,23 +16,7 @@ import {
 } from "lucide-react";
 
 export default async function DashboardPage() {
-  const rawTrades = await getTrades();
-
-  // Convert Prisma Decimal to number for calculations
-  const trades: Trade[] = rawTrades.map((t: (typeof rawTrades)[number]) => ({
-    ...t,
-    entryPrice: Number(t.entryPrice),
-    exitPrice: t.exitPrice ? Number(t.exitPrice) : null,
-    quantity: Number(t.quantity),
-    fees: t.fees ? Number(t.fees) : null,
-    stopLoss: t.stopLoss ? Number(t.stopLoss) : null,
-    takeProfit: t.takeProfit ? Number(t.takeProfit) : null,
-    pnl: t.pnl ? Number(t.pnl) : null,
-    riskReward: t.riskReward ? Number(t.riskReward) : null,
-    tags: t.tags?.map((tt: (typeof t.tags)[number]) => tt.tag) ?? [],
-    attachments: t.attachments ?? [],
-    checklist: t.checklist ?? [],
-  }));
+  const trades = await getTrades();
 
   const metrics = calculateMetrics(trades);
   const openTrades = trades.filter((t) => t.status === "OPEN");

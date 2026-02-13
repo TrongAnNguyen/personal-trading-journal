@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { format } from "date-fns";
-import type { Tag as TagType } from "@/types/trade";
+import type { Tag as TagType, Trade } from "@/types/trade";
 import { deleteTrade } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,26 +32,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PrismaDecimalLike = number | { toNumber?: () => number } | any;
-
-interface TradeWithTags {
-  id: string;
-  symbol: string;
-  assetClass: string;
-  side: string;
-  entryPrice: PrismaDecimalLike;
-  exitPrice?: PrismaDecimalLike | null;
-  quantity: PrismaDecimalLike;
-  pnl?: PrismaDecimalLike | null;
-  riskReward?: PrismaDecimalLike | null;
-  status: string;
-  entryTime: Date;
-  tags: { tag: TagType }[];
-}
-
 interface TradeListProps {
-  trades: TradeWithTags[];
+  trades: Trade[];
 }
 
 export function TradeList({ trades }: TradeListProps) {

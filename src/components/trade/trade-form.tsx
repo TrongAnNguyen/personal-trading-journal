@@ -50,14 +50,15 @@ import {
   createTradeSchema,
   Emotion,
 } from "@/types/trade";
+import { useRouter } from "next/navigation";
 
 interface TradeFormProps {
   accounts: Account[];
-  onSuccess?: () => void;
 }
 
-export function TradeForm({ accounts, onSuccess }: TradeFormProps) {
+export function TradeForm({ accounts }: TradeFormProps) {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const hasAccounts = accounts.length > 0;
 
@@ -85,7 +86,7 @@ export function TradeForm({ accounts, onSuccess }: TradeFormProps) {
       try {
         await createTrade(data as CreateTradeInput);
         form.reset();
-        onSuccess?.();
+        router.push("/dashboard/trades");
       } catch (error) {
         console.error("Failed to create trade:", error);
       }

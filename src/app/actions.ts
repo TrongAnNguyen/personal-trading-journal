@@ -8,6 +8,7 @@ import {
   type CreateTradeInput,
   type CloseTradeInput,
   type UpdateTradeInput,
+  Trade,
 } from "@/types/trade";
 import { calculatePnL, calculateRiskReward } from "@/lib/calculations";
 import { revalidatePath } from "next/cache";
@@ -227,7 +228,7 @@ export async function getTrades(
   accountId?: string,
   status?: "OPEN" | "CLOSED",
 ) {
-  const trades = await prisma.trade.findMany({
+  const rawTrades = await prisma.trade.findMany({
     where: {
       ...(accountId && { accountId }),
       ...(status && { status }),
@@ -239,6 +240,21 @@ export async function getTrades(
     },
     orderBy: { entryTime: "desc" },
   });
+
+  const trades: Trade[] = rawTrades.map((t: (typeof rawTrades)[number]) => ({
+    ...t,
+    entryPrice: Number(t.entryPrice),
+    exitPrice: t.exitPrice ? Number(t.exitPrice) : null,
+    quantity: Number(t.quantity),
+    fees: t.fees ? Number(t.fees) : null,
+    stopLoss: t.stopLoss ? Number(t.stopLoss) : null,
+    takeProfit: t.takeProfit ? Number(t.takeProfit) : null,
+    pnl: t.pnl ? Number(t.pnl) : null,
+    riskReward: t.riskReward ? Number(t.riskReward) : null,
+    tags: t.tags?.map((tt: (typeof t.tags)[number]) => tt.tag) ?? [],
+    attachments: t.attachments ?? [],
+    checklist: t.checklist ?? [],
+  }));
 
   return trades;
 }

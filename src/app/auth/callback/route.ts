@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
@@ -31,7 +32,36 @@ export async function GET(request: NextRequest) {
       },
     );
 
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        try {
+          await prisma.user.upsert({
+            where: { id: user.id },
+            create: {
+              id: user.id,
+              email: user.email!,
+              name:
+                user.user_metadata?.full_name || user.user_metadata?.name || "",
+            },
+            update: {
+              email: user.email!,
+              name:
+                user.user_metadata?.full_name ||
+                user.user_metadata?.name ||
+                undefined,
+            },
+          });
+        } catch (error) {
+          console.error("Error creating/updating user:", error);
+        }
+      }
+    }
   }
 
   // URL to redirect to after sign in process completes
