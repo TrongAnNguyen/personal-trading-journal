@@ -38,7 +38,7 @@ export function WinLossChart({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex h-[200px] items-center justify-center text-muted-foreground">
+          <div className="text-muted-foreground flex h-[200px] items-center justify-center">
             No closed trades yet
           </div>
         </CardContent>
@@ -60,16 +60,16 @@ export function WinLossChart({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="text-center p-3 rounded-lg bg-emerald-500/10">
+        <div className="mb-4 grid grid-cols-2 gap-4">
+          <div className="rounded-lg bg-emerald-500/10 p-3 text-center">
             <p className="text-2xl font-bold text-emerald-500">{wins}</p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               Wins (Avg: ${averageWin.toFixed(2)})
             </p>
           </div>
-          <div className="text-center p-3 rounded-lg bg-rose-500/10">
+          <div className="rounded-lg bg-rose-500/10 p-3 text-center">
             <p className="text-2xl font-bold text-rose-500">{losses}</p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               Losses (Avg: ${averageLoss.toFixed(2)})
             </p>
           </div>

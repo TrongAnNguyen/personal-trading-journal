@@ -27,8 +27,8 @@ export default async function AccountsPage() {
             className="hover:bg-accent/5 transition-colors"
           >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-lg font-medium flex items-center gap-2">
-                <Wallet className="h-5 w-5 text-muted-foreground" />
+              <CardTitle className="flex items-center gap-2 text-lg font-medium">
+                <Wallet className="text-muted-foreground h-5 w-5" />
                 {account.name}
               </CardTitle>
               <Badge variant="outline">{account.currency}</Badge>
@@ -42,12 +42,12 @@ export default async function AccountsPage() {
                       currency: account.currency,
                     }).format(Number(account.initialBalance))}
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Initial Balance
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
                   <Calendar className="h-4 w-4" />
                   <span>
                     Created {format(new Date(account.createdAt), "PPP")}
@@ -59,8 +59,8 @@ export default async function AccountsPage() {
         ))}
 
         {accounts.length === 0 && (
-          <div className="col-span-full flex flex-col items-center justify-center p-12 border border-dashed rounded-lg text-muted-foreground">
-            <Wallet className="h-12 w-12 mb-4 opacity-20" />
+          <div className="text-muted-foreground col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed p-12">
+            <Wallet className="mb-4 h-12 w-12 opacity-20" />
             <p>No accounts created yet.</p>
             <p className="text-sm">
               Add your first trading account to start logging trades.

@@ -135,7 +135,7 @@ export function CreateTagDialog() {
                   <FormLabel>Color (Optional)</FormLabel>
                   <FormControl>
                     <div className="flex gap-2">
-                      <Input type="color" className="w-12 p-1 h-9" {...field} />
+                      <Input type="color" className="h-9 w-12 p-1" {...field} />
                       <Input placeholder="#RRGGBB" {...field} />
                     </div>
                   </FormControl>

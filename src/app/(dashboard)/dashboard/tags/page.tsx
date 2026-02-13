@@ -34,7 +34,7 @@ export default async function TagsPage() {
         {Object.entries(tagsByType).map(([type, typeTags]) => (
           <Card key={type}>
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2 capitalize">
+              <CardTitle className="flex items-center gap-2 text-lg capitalize">
                 <Tags className="h-5 w-5 opacity-50" />
                 {type.toLowerCase().replace("_", " ")}
               </CardTitle>
@@ -60,8 +60,8 @@ export default async function TagsPage() {
         ))}
 
         {tags.length === 0 && (
-          <div className="col-span-full flex flex-col items-center justify-center p-12 border border-dashed rounded-lg text-muted-foreground">
-            <Tags className="h-12 w-12 mb-4 opacity-20" />
+          <div className="text-muted-foreground col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed p-12">
+            <Tags className="mb-4 h-12 w-12 opacity-20" />
             <p>No tags created yet.</p>
             <p className="text-sm">
               Create your first tag to categorize your trades.

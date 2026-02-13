@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime/client";
 import { z } from "zod";
 
 // ============================================================
@@ -58,6 +59,7 @@ export type AttachmentContext =
 // ============================================================
 
 export const createTradeSchema = z.object({
+  accountId: z.string().min(1, "Account is required"),
   symbol: z.string().min(1, "Symbol is required").max(20),
   assetClass: z.nativeEnum(AssetClass),
   side: z.nativeEnum(TradeSide),
@@ -174,7 +176,7 @@ export interface Account {
   id: string;
   userId: string;
   name: string;
-  initialBalance: number;
+  initialBalance: Decimal;
   currency: string;
   createdAt: Date;
   updatedAt: Date;

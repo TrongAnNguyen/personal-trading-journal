@@ -2,8 +2,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TradeForm } from "@/components/trade/trade-form";
 import { ArrowLeft } from "lucide-react";
+import { getAccounts } from "@/app/actions";
 
-export default function NewTradePage() {
+export default async function NewTradePage() {
+  const accounts = await getAccounts();
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -20,7 +23,7 @@ export default function NewTradePage() {
       </div>
 
       {/* Trade Form */}
-      <TradeForm />
+      <TradeForm accounts={accounts} />
     </div>
   );
 }

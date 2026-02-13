@@ -125,7 +125,7 @@ export function CloseTradeForm({
         {/* Exit Details */}
         <Card>
           <CardHeader className="pb-4">
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <X className="h-5 w-5" />
               Exit Details
             </CardTitle>
@@ -174,7 +174,7 @@ export function CloseTradeForm({
         {/* Post-Trade Review */}
         <Card>
           <CardHeader className="pb-4">
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <BookOpen className="h-5 w-5" />
               Post-Trade Review
             </CardTitle>

@@ -18,14 +18,16 @@ export async function signOut() {
   redirect("/login");
 }
 
-export async function updatePassword(formData: z.infer<typeof changePasswordSchema>) {
+export async function updatePassword(
+  formData: z.infer<typeof changePasswordSchema>,
+) {
   const validated = changePasswordSchema.safeParse(formData);
   if (!validated.success) {
     return { error: "Invalid password data" };
   }
 
   const supabase = await createSupabaseServerClient();
-  
+
   const { error } = await supabase.auth.updateUser({
     password: validated.data.password,
   });

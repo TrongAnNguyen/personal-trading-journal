@@ -100,12 +100,12 @@ export function TagSelector({
               onValueChange={setInputValue}
             />
             <CommandList>
-              <CommandEmpty className="py-2 px-4">
-                <p className="text-sm text-muted-foreground">No tags found.</p>
+              <CommandEmpty className="px-4 py-2">
+                <p className="text-muted-foreground text-sm">No tags found.</p>
                 {inputValue && (
                   <Button
                     variant="ghost"
-                    className="mt-2 w-full justify-start h-auto py-1 px-2 text-xs"
+                    className="mt-2 h-auto w-full justify-start px-2 py-1 text-xs"
                     onClick={handleCreateTag}
                     disabled={isCreating}
                   >
@@ -135,7 +135,7 @@ export function TagSelector({
                         style={{ backgroundColor: tag.color ?? "#6b7280" }}
                       />
                       <span>{tag.name}</span>
-                      <span className="text-xs text-muted-foreground ml-auto">
+                      <span className="text-muted-foreground ml-auto text-xs">
                         {tag.type}
                       </span>
                     </div>
@@ -149,12 +149,12 @@ export function TagSelector({
 
       {/* Selected Tags Display */}
       {selectedTags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-1">
+        <div className="mt-1 flex flex-wrap gap-2">
           {selectedTags.map((tag) => (
             <Badge
               key={tag.id}
               variant="secondary"
-              className="pl-2 pr-1 py-1 flex items-center gap-1"
+              className="flex items-center gap-1 py-1 pr-1 pl-2"
               style={{
                 backgroundColor: tag.color ? `${tag.color}20` : undefined,
                 color: tag.color ?? undefined,
@@ -165,7 +165,7 @@ export function TagSelector({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-3 w-3 ml-1 p-0 hover:bg-transparent"
+                className="ml-1 h-3 w-3 p-0 hover:bg-transparent"
                 onClick={() => handleSelect(tag.id)}
               >
                 <X className="h-3 w-3" />

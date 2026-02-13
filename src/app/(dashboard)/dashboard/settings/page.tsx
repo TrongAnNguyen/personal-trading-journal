@@ -24,12 +24,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, LogOut, Shield, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  Loader2,
+  LogOut,
+  Shield,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 
 export default function SettingsPage() {
   const [isPending, startTransition] = useTransition();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const form = useForm<ChangePasswordInput>({
     resolver: zodResolver(changePasswordSchema),
@@ -75,10 +84,10 @@ export default function SettingsPage() {
 
       {message && (
         <div
-          className={`p-4 rounded-md flex items-center gap-3 ${
+          className={`flex items-center gap-3 rounded-md p-4 ${
             message.type === "success"
-              ? "bg-primary/10 text-primary border border-primary/20"
-              : "bg-destructive/10 text-destructive border border-destructive/20"
+              ? "bg-primary/10 text-primary border-primary/20 border"
+              : "bg-destructive/10 text-destructive border-destructive/20 border"
           }`}
         >
           {message.type === "success" ? (
@@ -95,7 +104,7 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-primary" />
+              <Shield className="text-primary h-5 w-5" />
               <CardTitle>Security</CardTitle>
             </div>
             <CardDescription>
@@ -106,7 +115,7 @@ export default function SettingsPage() {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onUpdatePassword)}
-                className="space-y-4 max-w-md"
+                className="max-w-md space-y-4"
               >
                 <FormField
                   control={form.control}
@@ -115,7 +124,11 @@ export default function SettingsPage() {
                     <FormItem>
                       <FormLabel>New Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="••••••"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -128,7 +141,11 @@ export default function SettingsPage() {
                     <FormItem>
                       <FormLabel>Confirm New Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="••••••" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="••••••"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -152,7 +169,7 @@ export default function SettingsPage() {
         {/* Account / Logout */}
         <Card className="border-destructive/50">
           <CardHeader>
-            <div className="flex items-center gap-2 text-destructive">
+            <div className="text-destructive flex items-center gap-2">
               <LogOut className="h-5 w-5" />
               <CardTitle>Session</CardTitle>
             </div>

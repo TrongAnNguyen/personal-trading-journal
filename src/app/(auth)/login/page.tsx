@@ -58,8 +58,6 @@ export default function LoginPage() {
           password: data.password,
         });
 
-        console.log("data", info.data);
-
         if (info.error) {
           throw info.error;
         }
@@ -73,12 +71,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="bg-background flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="rounded-full bg-primary/10 p-3">
-              <TrendingUp className="h-8 w-8 text-primary" />
+          <div className="mb-4 flex justify-center">
+            <div className="bg-primary/10 rounded-full p-3">
+              <TrendingUp className="text-primary h-8 w-8" />
             </div>
           </div>
           <CardTitle className="text-2xl">Welcome back</CardTitle>
@@ -116,7 +114,7 @@ export default function LoginPage() {
                 )}
               />
               {error && (
-                <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
+                <div className="text-destructive bg-destructive/10 rounded-md p-3 text-sm">
                   {error}
                 </div>
               )}
@@ -133,9 +131,9 @@ export default function LoginPage() {
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="flex justify-center text-sm text-muted-foreground">
+        <CardFooter className="text-muted-foreground flex justify-center text-sm">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="ml-1 text-primary hover:underline">
+          <Link href="/register" className="text-primary ml-1 hover:underline">
             Sign up
           </Link>
         </CardFooter>

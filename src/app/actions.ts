@@ -31,7 +31,7 @@ export async function createTrade(input: CreateTradeInput) {
 
   const trade = await prisma.trade.create({
     data: {
-      accountId: user.id,
+      accountId: validated.accountId,
       symbol: validated.symbol.toUpperCase(),
       assetClass: validated.assetClass,
       side: validated.side,

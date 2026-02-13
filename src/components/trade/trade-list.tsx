@@ -92,8 +92,8 @@ export function TradeList({ trades }: TradeListProps) {
   if (trades.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="rounded-full bg-muted p-4 mb-4">
-          <TrendingUp className="h-8 w-8 text-muted-foreground" />
+        <div className="bg-muted mb-4 rounded-full p-4">
+          <TrendingUp className="text-muted-foreground h-8 w-8" />
         </div>
         <h3 className="text-lg font-semibold">No trades yet</h3>
         <p className="text-muted-foreground mt-1">
@@ -107,7 +107,7 @@ export function TradeList({ trades }: TradeListProps) {
   }
 
   return (
-    <div className="rounded-lg border bg-card">
+    <div className="bg-card rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
@@ -129,7 +129,7 @@ export function TradeList({ trades }: TradeListProps) {
               <TableCell className="font-medium">
                 <div className="flex flex-col">
                   <span>{trade.symbol}</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-muted-foreground text-xs">
                     {trade.assetClass}
                   </span>
                 </div>
@@ -144,9 +144,9 @@ export function TradeList({ trades }: TradeListProps) {
                   }
                 >
                   {trade.side === "LONG" ? (
-                    <TrendingUp className="h-3 w-3 mr-1" />
+                    <TrendingUp className="mr-1 h-3 w-3" />
                   ) : (
-                    <TrendingDown className="h-3 w-3 mr-1" />
+                    <TrendingDown className="mr-1 h-3 w-3" />
                   )}
                   {trade.side}
                 </Badge>
@@ -202,21 +202,21 @@ export function TradeList({ trades }: TradeListProps) {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
                       <Link href={`/dashboard/trades/${trade.id}`}>
-                        <Eye className="h-4 w-4 mr-2" />
+                        <Eye className="mr-2 h-4 w-4" />
                         View Details
                       </Link>
                     </DropdownMenuItem>
                     {trade.status === "OPEN" && (
                       <DropdownMenuItem asChild>
                         <Link href={`/dashboard/trades/${trade.id}/close`}>
-                          <X className="h-4 w-4 mr-2" />
+                          <X className="mr-2 h-4 w-4" />
                           Close Trade
                         </Link>
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem asChild>
                       <Link href={`/dashboard/trades/${trade.id}/edit`}>
-                        <Edit className="h-4 w-4 mr-2" />
+                        <Edit className="mr-2 h-4 w-4" />
                         Edit
                       </Link>
                     </DropdownMenuItem>
@@ -225,7 +225,7 @@ export function TradeList({ trades }: TradeListProps) {
                       className="text-destructive"
                       disabled={isPending}
                     >
-                      <Trash2 className="h-4 w-4 mr-2" />
+                      <Trash2 className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>

@@ -30,7 +30,7 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex h-[300px] items-center justify-center text-muted-foreground">
+          <div className="text-muted-foreground flex h-[300px] items-center justify-center">
             No closed trades yet
           </div>
         </CardContent>

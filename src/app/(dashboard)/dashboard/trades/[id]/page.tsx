@@ -62,9 +62,9 @@ export default async function TradeDetailPage({
                 }
               >
                 {trade.side === "LONG" ? (
-                  <TrendingUp className="h-3 w-3 mr-1" />
+                  <TrendingUp className="mr-1 h-3 w-3" />
                 ) : (
-                  <TrendingDown className="h-3 w-3 mr-1" />
+                  <TrendingDown className="mr-1 h-3 w-3" />
                 )}
                 {trade.side}
               </Badge>
@@ -107,7 +107,7 @@ export default async function TradeDetailPage({
           <CardContent className="py-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Net Profit/Loss</p>
+                <p className="text-muted-foreground text-sm">Net Profit/Loss</p>
                 <p
                   className={`text-4xl font-bold ${
                     pnl >= 0 ? "text-emerald-500" : "text-rose-500"
@@ -118,7 +118,7 @@ export default async function TradeDetailPage({
               </div>
               {riskReward !== null && (
                 <div className="text-right">
-                  <p className="text-sm text-muted-foreground">Risk/Reward</p>
+                  <p className="text-muted-foreground text-sm">Risk/Reward</p>
                   <p className="text-2xl font-bold">{riskReward}R</p>
                 </div>
               )}
@@ -140,23 +140,23 @@ export default async function TradeDetailPage({
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Entry Price</p>
+                <p className="text-muted-foreground text-sm">Entry Price</p>
                 <p className="font-mono text-lg">
                   ${entryPrice.toLocaleString()}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Exit Price</p>
+                <p className="text-muted-foreground text-sm">Exit Price</p>
                 <p className="font-mono text-lg">
                   {exitPrice ? `$${exitPrice.toLocaleString()}` : "-"}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Quantity</p>
+                <p className="text-muted-foreground text-sm">Quantity</p>
                 <p className="font-mono text-lg">{quantity.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Fees</p>
+                <p className="text-muted-foreground text-sm">Fees</p>
                 <p className="font-mono text-lg">
                   ${trade.fees ? Number(trade.fees).toFixed(2) : "0.00"}
                 </p>
@@ -165,7 +165,7 @@ export default async function TradeDetailPage({
             <Separator />
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Stop Loss</p>
+                <p className="text-muted-foreground text-sm">Stop Loss</p>
                 <p className="font-mono">
                   {trade.stopLoss
                     ? `$${Number(trade.stopLoss).toLocaleString()}`
@@ -173,7 +173,7 @@ export default async function TradeDetailPage({
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Take Profit</p>
+                <p className="text-muted-foreground text-sm">Take Profit</p>
                 <p className="font-mono">
                   {trade.takeProfit
                     ? `$${Number(trade.takeProfit).toLocaleString()}`
@@ -194,14 +194,14 @@ export default async function TradeDetailPage({
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <p className="text-sm text-muted-foreground">Entry Time</p>
+              <p className="text-muted-foreground text-sm">Entry Time</p>
               <p className="font-medium">
                 {format(new Date(trade.entryTime), "PPpp")}
               </p>
             </div>
             {trade.exitTime && (
               <div>
-                <p className="text-sm text-muted-foreground">Exit Time</p>
+                <p className="text-muted-foreground text-sm">Exit Time</p>
                 <p className="font-medium">
                   {format(new Date(trade.exitTime), "PPpp")}
                 </p>
@@ -221,13 +221,13 @@ export default async function TradeDetailPage({
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Entry Emotion</p>
+                <p className="text-muted-foreground text-sm">Entry Emotion</p>
                 <Badge variant="outline">
                   {trade.emotionEntry ?? "Not recorded"}
                 </Badge>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Exit Emotion</p>
+                <p className="text-muted-foreground text-sm">Exit Emotion</p>
                 <Badge variant="outline">
                   {trade.emotionExit ?? "Not recorded"}
                 </Badge>
@@ -272,7 +272,7 @@ export default async function TradeDetailPage({
           <CardContent className="space-y-4">
             {trade.notes && (
               <div>
-                <p className="text-sm font-medium text-muted-foreground mb-2">
+                <p className="text-muted-foreground mb-2 text-sm font-medium">
                   Trade Notes
                 </p>
                 <p className="whitespace-pre-wrap">{trade.notes}</p>
@@ -280,7 +280,7 @@ export default async function TradeDetailPage({
             )}
             {trade.lessonsLearned && (
               <div>
-                <p className="text-sm font-medium text-muted-foreground mb-2">
+                <p className="text-muted-foreground mb-2 text-sm font-medium">
                   Lessons Learned
                 </p>
                 <p className="whitespace-pre-wrap">{trade.lessonsLearned}</p>

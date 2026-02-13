@@ -61,7 +61,7 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total PnL</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div
@@ -72,7 +72,7 @@ export default async function DashboardPage() {
               {metrics.totalPnL >= 0 ? "+" : ""}$
               {metrics.totalPnL.toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {metrics.totalTrades} closed trades
             </p>
           </CardContent>
@@ -81,11 +81,11 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Win Rate</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <Target className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{metrics.winRate}%</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {metrics.winningTrades}W / {metrics.losingTrades}L
             </p>
           </CardContent>
@@ -94,11 +94,11 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Profit Factor</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+            <Activity className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{metrics.profitFactor}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               Gross profit / Gross loss
             </p>
           </CardContent>
@@ -107,13 +107,13 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Max Drawdown</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+            <AlertTriangle className="text-muted-foreground h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-rose-500">
               -${metrics.maxDrawdown.toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">Peak to trough</p>
+            <p className="text-muted-foreground text-xs">Peak to trough</p>
           </CardContent>
         </Card>
       </div>
@@ -149,7 +149,7 @@ export default async function DashboardPage() {
                       )}
                       <div>
                         <p className="font-medium">{trade.symbol}</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-muted-foreground text-xs">
                           {trade.assetClass}
                         </p>
                       </div>
@@ -158,7 +158,7 @@ export default async function DashboardPage() {
                       <p className="font-mono text-sm">
                         ${Number(trade.entryPrice).toLocaleString()}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         Qty: {Number(trade.quantity).toLocaleString()}
                       </p>
                     </div>

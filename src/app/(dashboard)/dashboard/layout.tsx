@@ -1,15 +1,15 @@
+import {
+  LayoutDashboard,
+  Plus,
+  Settings,
+  Tags,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import {
-  LayoutDashboard,
-  TrendingUp,
-  Settings,
-  Wallet,
-  Tags,
-  Plus,
-} from "lucide-react";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -17,14 +17,14 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="flex h-screen bg-background">
+    <div className="bg-background flex">
       {/* Sidebar */}
-      <aside className="hidden w-64 border-r bg-card md:block">
+      <aside className="bg-card fixed top-0 bottom-0 left-0 hidden w-64 border-r md:block">
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-16 items-center gap-2 border-b px-6">
-            <TrendingUp className="h-6 w-6 text-primary" />
-            <span className="font-semibold text-lg">TradeJournal</span>
+            <TrendingUp className="text-primary h-6 w-6" />
+            <span className="text-lg font-semibold">TradeJournal</span>
           </div>
 
           {/* Navigation */}
@@ -99,7 +99,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto md:pl-64">
         <div className="container max-w-6xl py-6">{children}</div>
       </main>
     </div>
