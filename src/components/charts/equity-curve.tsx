@@ -50,20 +50,23 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
   }));
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
+    <Card className="glass-card overflow-hidden">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" />
-            Equity Curve
-          </CardTitle>
+          <div className="space-y-1">
+            <CardTitle className="text-sm font-bold tracking-tight flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-primary" />
+              Equity Curve
+            </CardTitle>
+            <p className="text-xs text-muted-foreground font-medium">Performance analytics and trend tracking</p>
+          </div>
           <div className="text-right">
-            <p className="text-2xl font-bold">
+            <p className="text-2xl font-bold tracking-tight">
               ${currentEquity.toLocaleString()}
             </p>
             <p
-              className={`text-sm ${
-                isPositive ? "text-emerald-500" : "text-rose-500"
+              className={`text-sm font-bold ${
+                isPositive ? "text-[var(--profit)]" : "text-[var(--loss)]"
               }`}
             >
               {isPositive ? "+" : ""}
@@ -73,31 +76,40 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div className="h-[300px] w-full mt-4">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={formattedData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+            <LineChart data={formattedData} margin={{ top: 5, right: 5, left: 10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="4 4" stroke="var(--border)" strokeOpacity={0.2} vertical={false} />
               <XAxis
                 dataKey="date"
-                stroke="#888"
-                fontSize={12}
+                stroke="var(--muted-foreground)"
+                fontSize={10}
+                fontWeight={500}
                 tickLine={false}
+                axisLine={false}
+                dy={10}
               />
               <YAxis
-                stroke="#888"
-                fontSize={12}
+                stroke="var(--muted-foreground)"
+                fontSize={10}
+                fontWeight={500}
                 tickLine={false}
+                axisLine={false}
                 tickFormatter={(value) => `$${value.toLocaleString()}`}
+                dx={-10}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#1a1a1a",
-                  border: "1px solid #333",
-                  borderRadius: "8px",
+                  backgroundColor: "rgba(var(--background), 0.8)",
+                  backdropFilter: "blur(12px)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "12px",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
                 }}
-                labelFormatter={(_, payload) =>
-                  payload[0]?.payload?.fullDate ?? ""
-                }
+                itemStyle={{ padding: "0px" }}
+                labelFormatter={(label) => `Date: ${label}`}
                 formatter={(value) => [
                   `$${(value as number).toLocaleString()}`,
                   "Equity",
@@ -105,16 +117,17 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
               />
               <ReferenceLine
                 y={initialEquity}
-                stroke="#666"
-                strokeDasharray="3 3"
+                stroke="var(--muted-foreground)"
+                strokeOpacity={0.2}
+                strokeDasharray="4 4"
               />
               <Line
                 type="monotone"
                 dataKey="equity"
-                stroke={isPositive ? "#10b981" : "#ef4444"}
-                strokeWidth={2}
+                stroke="var(--primary)"
+                strokeWidth={3}
                 dot={false}
-                activeDot={{ r: 4, fill: isPositive ? "#10b981" : "#ef4444" }}
+                activeDot={{ r: 4, fill: "var(--primary)", strokeWidth: 0 }}
               />
             </LineChart>
           </ResponsiveContainer>

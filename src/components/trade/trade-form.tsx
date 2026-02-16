@@ -79,25 +79,26 @@ export function TradeForm({ accounts }: TradeFormProps) {
             variant="outline"
             onClick={() => form.reset()}
             disabled={isPending || !hasAccounts}
+            className="font-bold border-white/10"
           >
-            Reset
+            RESET_BUFFER
           </Button>
           <Button
             type="submit"
             disabled={isPending || !hasAccounts}
             className={
               selectedSide === "LONG"
-                ? "bg-emerald-600 hover:bg-emerald-700"
-                : "bg-rose-600 hover:bg-rose-700"
+                ? "bg-[var(--profit)] text-black font-bold hover:bg-[var(--profit)]/90"
+                : "bg-[var(--loss)] text-white font-bold hover:bg-[var(--loss)]/90"
             }
           >
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating...
+                EXECUTING...
               </>
             ) : (
-              <>Open {selectedSide === "LONG" ? "Long" : "Short"} Trade</>
+              <>INITIATE {selectedSide === "LONG" ? "LONG" : "SHORT"} POSITION</>
             )}
           </Button>
         </div>

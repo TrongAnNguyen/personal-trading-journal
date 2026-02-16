@@ -1,65 +1,78 @@
-import Image from "next/image";
+import Link from "next/link";
+import { TrendingUp, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between bg-white px-16 py-32 sm:items-start dark:bg-black">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl leading-10 font-semibold tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top_left,var(--grad-1)_0%,transparent_80%),radial-gradient(ellipse_at_bottom_right,var(--grad-2)_0%,transparent_80%)] bg-background p-6 selection:bg-primary/30 selection:text-primary overflow-hidden">
+      <style jsx global>{`
+        :root {
+          --grad-1: oklch(0.7 0.1 230);
+          --grad-2: oklch(0.85 0.05 200);
+        }
+        .dark {
+          --grad-1: oklch(0.25 0.08 250);
+          --grad-2: oklch(0.3 0.12 220);
+        }
+      `}</style>
+      {/* Decorative blurred circles */}
+      <div className="absolute top-1/4 -left-20 h-96 w-96 rounded-full bg-primary/10 blur-[100px]" />
+      <div className="absolute bottom-1/4 -right-20 h-96 w-96 rounded-full bg-accent/10 blur-[100px]" />
+
+      <main className="glass-morphism relative flex w-full max-w-4xl flex-col items-center gap-12 rounded-[40px] p-8 md:p-20 shadow-2xl">
+        <div className="flex flex-col items-center gap-6 text-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-primary text-primary-foreground shadow-2xl shadow-primary/30 animate-bounce-slow">
+            <TrendingUp className="h-10 w-10" />
+          </div>
+          <h1 className="text-6xl font-black tracking-tighter md:text-8xl bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">
+            Trade<span className="text-primary">.OS</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+        </div>
+
+        <div className="space-y-6 text-center">
+          <h2 className="text-2xl font-bold tracking-tight md:text-4xl max-w-2xl">
+            Precision analytics for the modern trader.
+          </h2>
+          <p className="max-w-xl text-lg font-medium text-muted-foreground leading-relaxed">
+            A high-performance trading journal built with focus and institutional clarity. Track your edge, manage your psychology, and scale your alpha.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="bg-foreground text-background flex h-12 w-full items-center justify-center gap-2 rounded-full px-5 transition-colors hover:bg-[#383838] md:w-[158px] dark:hover:bg-[#ccc]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] md:w-[158px] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="flex flex-col gap-6 sm:flex-row w-full justify-center">
+          <Button size="lg" className="h-16 px-10 text-xl rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-transform" asChild>
+            <Link href="/dashboard">
+              Launch Dashboard
+              <ArrowRight className="ml-2 h-6 w-6" />
+            </Link>
+          </Button>
+          <Button variant="outline" size="lg" className="h-16 px-10 text-xl rounded-2xl bg-background/50 backdrop-blur-sm hover:scale-105 transition-transform" asChild>
+            <a href="https://nextjs.org/docs" target="_blank" rel="noopener noreferrer">
+              Documentation
+            </a>
+          </Button>
+        </div>
+
+        <div className="w-full border-t border-border/30 pt-10">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+            {[
+              { label: "Status", value: "Operational" },
+              { label: "Version", value: "v2.1.0-Glass" },
+              { label: "Latency", value: "0.8ms" },
+              { label: "Alpha", value: "Enhanced" },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
+                <p className="text-lg font-bold tracking-tight">{stat.value}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </main>
+      
+      <p className="mt-10 text-[10px] font-bold uppercase tracking-widest opacity-40">
+        © 2026 Analytical Systems Corp • All Rights Reserved
+      </p>
     </div>
   );
 }
+

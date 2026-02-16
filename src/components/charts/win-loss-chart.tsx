@@ -52,54 +52,67 @@ export function WinLossChart({
   ];
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2">
-          <BarChart3 className="h-5 w-5" />
+    <Card className="glass-card overflow-hidden">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-sm font-bold tracking-tight flex items-center gap-2">
+          <BarChart3 className="h-4 w-4 text-primary" />
           Win/Loss Distribution
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mb-4 grid grid-cols-2 gap-4">
-          <div className="rounded-lg bg-emerald-500/10 p-3 text-center">
-            <p className="text-2xl font-bold text-emerald-500">{wins}</p>
-            <p className="text-muted-foreground text-xs">
-              Wins (Avg: ${averageWin.toFixed(2)})
+        <div className="mb-6 grid grid-cols-2 gap-4">
+          <div className="rounded-2xl bg-[var(--profit)]/10 p-4 text-center border border-[var(--profit)]/20 shadow-sm">
+            <p className="text-2xl font-bold text-[var(--profit)] tracking-tight">{wins}</p>
+            <p className="text-[10px] font-bold text-[var(--profit)]/60 uppercase tracking-widest mt-1">
+              Wins
             </p>
+            <p className="text-[10px] font-medium text-muted-foreground mt-1">Avg: ${averageWin.toFixed(2)}</p>
           </div>
-          <div className="rounded-lg bg-rose-500/10 p-3 text-center">
-            <p className="text-2xl font-bold text-rose-500">{losses}</p>
-            <p className="text-muted-foreground text-xs">
-              Losses (Avg: ${averageLoss.toFixed(2)})
+          <div className="rounded-2xl bg-[var(--loss)]/10 p-4 text-center border border-[var(--loss)]/20 shadow-sm">
+            <p className="text-2xl font-bold text-[var(--loss)] tracking-tight">{losses}</p>
+            <p className="text-[10px] font-bold text-[var(--loss)]/60 uppercase tracking-widest mt-1">
+              Losses
             </p>
+            <p className="text-[10px] font-medium text-muted-foreground mt-1">Avg: ${averageLoss.toFixed(2)}</p>
           </div>
         </div>
-        <div className="h-[150px]">
+        <div className="h-[150px] w-full mt-4">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-              <XAxis type="number" stroke="#888" fontSize={12} />
+            <BarChart data={data} layout="vertical" margin={{ top: 0, right: 30, left: 10, bottom: 0 }}>
+              <XAxis type="number" stroke="var(--muted-foreground)" fontSize={10} fontWeight={500} axisLine={false} tickLine={false} />
               <YAxis
                 dataKey="name"
                 type="category"
-                stroke="#888"
-                fontSize={12}
+                stroke="var(--muted-foreground)"
+                fontSize={10}
+                fontWeight={600}
                 width={60}
+                axisLine={false}
+                tickLine={false}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#1a1a1a",
-                  border: "1px solid #333",
-                  borderRadius: "8px",
+                  backgroundColor: "rgba(var(--background), 0.8)",
+                  backdropFilter: "blur(12px)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "12px",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
                 }}
+                cursor={{ fill: "rgba(0,0,0,0.02)", radius: 10 }}
                 formatter={(value, name) => [
                   value as number,
-                  name === "count" ? "Trades" : (name as string),
+                  name === "count" ? "Count" : name,
                 ]}
               />
-              <Bar dataKey="count" radius={[0, 4, 4, 0]}>
+              <Bar dataKey="count" radius={[0, 10, 10, 0]} barSize={24}>
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={entry.name === "Wins" ? "var(--profit)" : "var(--loss)"} 
+                    fillOpacity={0.8}
+                  />
                 ))}
               </Bar>
             </BarChart>

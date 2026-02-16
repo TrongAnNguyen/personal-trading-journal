@@ -38,36 +38,36 @@ export function TradeList({ trades }: TradeListProps) {
 
   if (trades.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="bg-muted mb-4 rounded-full p-4">
-          <TrendingUp className="text-muted-foreground h-8 w-8" />
+      <div className="flex flex-col items-center justify-center py-24 text-center glass-morphism rounded-3xl border-dashed border-2">
+        <div className="mb-6 rounded-2xl bg-primary/10 p-5 text-primary shadow-lg shadow-primary/10">
+          <TrendingUp className="h-8 w-8" />
         </div>
-        <h3 className="text-lg font-semibold">No trades yet</h3>
-        <p className="text-muted-foreground mt-1">
-          Start logging your trades to track performance
+        <h3 className="text-xl font-bold tracking-tight">No Trade History</h3>
+        <p className="mt-2 text-sm text-muted-foreground max-w-xs">
+          Your trade log is currently empty. Start by adding your first execution.
         </p>
-        <Button asChild className="mt-4">
-          <Link href="/dashboard/trades/new">Log Your First Trade</Link>
+        <Button asChild className="mt-8 rounded-xl px-8" size="lg">
+          <Link href="/dashboard/trades/new">Add New Trade</Link>
         </Button>
       </div>
     );
   }
 
   return (
-    <div className="bg-card rounded-lg border">
+    <div className="glass-morphism rounded-3xl overflow-hidden">
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Symbol</TableHead>
-            <TableHead>Side</TableHead>
-            <TableHead>Entry</TableHead>
-            <TableHead>Exit</TableHead>
-            <TableHead>Qty</TableHead>
-            <TableHead>PnL</TableHead>
-            <TableHead>R:R</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="w-[50px]"></TableHead>
+        <TableHeader className="bg-primary/5">
+          <TableRow className="hover:bg-transparent border-border/30">
+            <TableHead className="w-[120px] font-bold text-xs uppercase tracking-wider text-muted-foreground py-5 pl-6">Symbol</TableHead>
+            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Side</TableHead>
+            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Entry</TableHead>
+            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Exit</TableHead>
+            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Qty</TableHead>
+            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">PnL</TableHead>
+            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">R:R</TableHead>
+            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Status</TableHead>
+            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Date</TableHead>
+            <TableHead className="w-[80px] pr-6"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

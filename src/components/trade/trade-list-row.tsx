@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,11 +42,11 @@ const formatPnL = (pnl: number | null | undefined) => {
 
 export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeListRowProps) {
   return (
-    <TableRow>
-      <TableCell className="font-medium">
+    <TableRow className="border-border/30 transition-colors hover:bg-primary/[0.02]">
+      <TableCell className="py-4 pl-6">
         <div className="flex flex-col">
-          <span>{trade.symbol}</span>
-          <span className="text-muted-foreground text-xs">
+          <span className="font-bold tracking-tight text-base">{trade.symbol}</span>
+          <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
             {trade.assetClass}
           </span>
         </div>
@@ -53,61 +54,63 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
       <TableCell>
         <Badge
           variant="outline"
-          className={
+          className={cn(
+            "rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider border-none shadow-sm",
             trade.side === "LONG"
-              ? "border-emerald-500/50 text-emerald-500"
-              : "border-rose-500/50 text-rose-500"
-          }
+              ? "text-[var(--profit)] bg-[var(--profit)]/10"
+              : "text-[var(--loss)] bg-[var(--loss)]/10"
+          )}
         >
           {trade.side === "LONG" ? (
-            <TrendingUp className="mr-1 h-3 w-3" />
+            <TrendingUp className="mr-1.5 h-3 w-3" />
           ) : (
-            <TrendingDown className="mr-1 h-3 w-3" />
+            <TrendingDown className="mr-1.5 h-3 w-3" />
           )}
           {trade.side}
         </Badge>
       </TableCell>
-      <TableCell className="font-mono text-sm">
+      <TableCell className="font-medium tabular-nums text-sm">
         {formatPrice(Number(trade.entryPrice))}
       </TableCell>
-      <TableCell className="font-mono text-sm">
-        {trade.exitPrice ? formatPrice(Number(trade.exitPrice)) : "-"}
+      <TableCell className="font-medium tabular-nums text-sm text-muted-foreground">
+        {trade.exitPrice ? formatPrice(Number(trade.exitPrice)) : "—"}
       </TableCell>
-      <TableCell className="font-mono text-sm">
+      <TableCell className="font-medium tabular-nums text-sm">
         {formatPrice(Number(trade.quantity))}
       </TableCell>
       <TableCell>
         {trade.pnl !== null && trade.pnl !== undefined ? (
           <span
-            className={`font-mono font-medium ${
+            className={`font-bold tabular-nums text-sm ${
               Number(trade.pnl) >= 0
-                ? "text-emerald-500"
-                : "text-rose-500"
+                ? "text-[var(--profit)]"
+                : "text-[var(--loss)]"
             }`}
           >
             {formatPnL(Number(trade.pnl))}
           </span>
         ) : (
-          <span className="text-muted-foreground">-</span>
+          <span className="text-muted-foreground">—</span>
         )}
       </TableCell>
-      <TableCell className="font-mono">
-        {trade.riskReward ? `${trade.riskReward}R` : "-"}
+      <TableCell className="font-bold text-sm text-primary/80">
+        {trade.riskReward ? `${trade.riskReward}R` : "—"}
       </TableCell>
       <TableCell>
         <Badge
           variant={trade.status === "OPEN" ? "default" : "secondary"}
+          className="rounded-full text-[10px] font-bold uppercase tracking-wider"
         >
           {trade.status}
         </Badge>
       </TableCell>
-      <TableCell className="text-muted-foreground text-sm">
+      <TableCell className="text-muted-foreground text-xs font-medium">
         {format(new Date(trade.entryTime), "MMM d, yyyy")}
       </TableCell>
-      <TableCell>
+      <TableCell className="pr-6">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-primary/10 transition-colors">
               {isPending && deletingId === trade.id ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
