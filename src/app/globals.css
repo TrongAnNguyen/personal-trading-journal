@@ -34,6 +34,8 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-profit: var(--profit);
+  --color-loss: var(--loss);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -51,6 +53,9 @@
   --glass-opacity: 0.1;
   --glass-border-opacity: 0.2;
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
+  --blur-glass: var(--glass-blur);
+  --shadow-glass: var(--glass-shadow);
 }
 
 :root {
@@ -142,10 +147,9 @@
 
 @layer utilities {
   .glass-morphism {
-    @apply bg-background/60 backdrop-blur-[var(--glass-blur)] border border-white/30 dark:border-white/20 shadow-[var(--glass-shadow)];
+    @apply bg-background/60 backdrop-blur-glass shadow-glass border border-white/30 dark:border-white/20;
   }
   .glass-card {
-    @apply bg-card backdrop-blur-[var(--glass-blur)] border border-white/30 dark:border-white/20 shadow-[var(--glass-shadow)];
+    @apply bg-card backdrop-blur-glass shadow-glass border border-white/30 dark:border-white/20;
   }
 }
-

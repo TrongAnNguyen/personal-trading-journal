@@ -88,8 +88,8 @@ export function TradeForm({ accounts }: TradeFormProps) {
             disabled={isPending || !hasAccounts}
             className={
               selectedSide === "LONG"
-                ? "bg-[var(--profit)] text-black font-bold hover:bg-[var(--profit)]/90"
-                : "bg-[var(--loss)] text-white font-bold hover:bg-[var(--loss)]/90"
+                ? "bg-profit text-black font-bold hover:bg-profit/90"
+                : "bg-loss text-white font-bold hover:bg-loss/90"
             }
           >
             {isPending ? (

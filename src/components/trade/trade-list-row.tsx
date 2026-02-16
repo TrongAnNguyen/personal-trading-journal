@@ -57,8 +57,8 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
           className={cn(
             "rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider border-none shadow-sm",
             trade.side === "LONG"
-              ? "text-[var(--profit)] bg-[var(--profit)]/10"
-              : "text-[var(--loss)] bg-[var(--loss)]/10"
+              ? "text-profit bg-profit/10"
+              : "text-loss bg-loss/10"
           )}
         >
           {trade.side === "LONG" ? (
@@ -83,8 +83,8 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
           <span
             className={`font-bold tabular-nums text-sm ${
               Number(trade.pnl) >= 0
-                ? "text-[var(--profit)]"
-                : "text-[var(--loss)]"
+                ? "text-profit"
+                : "text-loss"
             }`}
           >
             {formatPnL(Number(trade.pnl))}

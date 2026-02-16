@@ -66,7 +66,7 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
             </p>
             <p
               className={`text-sm font-bold ${
-                isPositive ? "text-[var(--profit)]" : "text-[var(--loss)]"
+                isPositive ? "text-profit" : "text-loss"
               }`}
             >
               {isPositive ? "+" : ""}

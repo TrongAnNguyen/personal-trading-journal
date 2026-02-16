@@ -61,16 +61,16 @@ export function WinLossChart({
       </CardHeader>
       <CardContent>
         <div className="mb-6 grid grid-cols-2 gap-4">
-          <div className="rounded-2xl bg-[var(--profit)]/10 p-4 text-center border border-[var(--profit)]/20 shadow-sm">
-            <p className="text-2xl font-bold text-[var(--profit)] tracking-tight">{wins}</p>
-            <p className="text-[10px] font-bold text-[var(--profit)]/60 uppercase tracking-widest mt-1">
+          <div className="rounded-2xl bg-profit/10 p-4 text-center border border-profit/20 shadow-sm">
+            <p className="text-2xl font-bold text-profit tracking-tight">{wins}</p>
+            <p className="text-[10px] font-bold text-profit/60 uppercase tracking-widest mt-1">
               Wins
             </p>
             <p className="text-[10px] font-medium text-muted-foreground mt-1">Avg: ${averageWin.toFixed(2)}</p>
           </div>
-          <div className="rounded-2xl bg-[var(--loss)]/10 p-4 text-center border border-[var(--loss)]/20 shadow-sm">
-            <p className="text-2xl font-bold text-[var(--loss)] tracking-tight">{losses}</p>
-            <p className="text-[10px] font-bold text-[var(--loss)]/60 uppercase tracking-widest mt-1">
+          <div className="rounded-2xl bg-loss/10 p-4 text-center border border-loss/20 shadow-sm">
+            <p className="text-2xl font-bold text-loss tracking-tight">{losses}</p>
+            <p className="text-[10px] font-bold text-loss/60 uppercase tracking-widest mt-1">
               Losses
             </p>
             <p className="text-[10px] font-medium text-muted-foreground mt-1">Avg: ${averageLoss.toFixed(2)}</p>

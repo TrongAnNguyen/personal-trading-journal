@@ -1,8 +1,8 @@
-import { getAccounts } from "@/lib/actions/accounts";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wallet, TrendingUp, Calendar } from "lucide-react";
+import { getAccounts } from "@/lib/actions/accounts";
 import { format } from "date-fns";
+import { Calendar, Wallet } from "lucide-react";
 import { CreateAccountDialog } from "./create-account-dialog";
 
 export default async function AccountsPage() {

@@ -62,9 +62,7 @@ export default async function DashboardPage() {
           <CardContent>
             <div
               className={`text-4xl font-bold tracking-tight ${
-                metrics.totalPnL >= 0
-                  ? "text-[var(--profit)]"
-                  : "text-[var(--loss)]"
+                metrics.totalPnL >= 0 ? "text-profit" : "text-loss"
               }`}
             >
               {metrics.totalPnL >= 0 ? "+" : ""}$
@@ -129,7 +127,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold tracking-tight text-[var(--loss)]">
+            <div className="text-loss text-4xl font-bold tracking-tight">
               -${metrics.maxDrawdown.toLocaleString()}
             </div>
             <p className="text-muted-foreground mt-2 text-[10px] font-bold tracking-wide uppercase">
@@ -181,8 +179,8 @@ export default async function DashboardPage() {
                       <div
                         className={`flex h-12 w-12 items-center justify-center rounded-xl shadow-lg transition-all ${
                           trade.side === "LONG"
-                            ? "bg-[var(--profit)]/20 text-[var(--profit)] shadow-green-500/10"
-                            : "bg-[var(--loss)]/20 text-[var(--loss)] shadow-red-500/10"
+                            ? "bg-profit/20 text-profit shadow-green-500/10"
+                            : "bg-loss/20 text-loss shadow-red-500/10"
                         }`}
                       >
                         {trade.side === "LONG" ? (
@@ -247,7 +245,7 @@ export default async function DashboardPage() {
                   >
                     <div className="flex items-center gap-4">
                       <div
-                        className={`rounded-lg p-2 ${trade.side === "LONG" ? "bg-[var(--profit)]/10 text-[var(--profit)]" : "bg-[var(--loss)]/10 text-[var(--loss)]"}`}
+                        className={`rounded-lg p-2 ${trade.side === "LONG" ? "bg-profit/10 text-profit" : "bg-loss/10 text-loss"}`}
                       >
                         {trade.side === "LONG" ? (
                           <TrendingUp className="h-4 w-4" />
@@ -265,9 +263,7 @@ export default async function DashboardPage() {
                     {trade.pnl !== null && (
                       <span
                         className={`text-lg font-bold tracking-tight ${
-                          Number(trade.pnl) >= 0
-                            ? "text-[var(--profit)]"
-                            : "text-[var(--loss)]"
+                          Number(trade.pnl) >= 0 ? "text-profit" : "text-loss"
                         }`}
                       >
                         {Number(trade.pnl) >= 0 ? "+" : ""}$
