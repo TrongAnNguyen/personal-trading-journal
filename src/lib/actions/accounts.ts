@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { serialize } from "@/lib/utils";
 
 export async function getAccounts() {
   const supabase = await createSupabaseServerClient();
@@ -14,10 +15,12 @@ export async function getAccounts() {
     throw new Error("Unauthorized");
   }
 
-  return prisma.account.findMany({
+  const accounts = await prisma.account.findMany({
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
   });
+
+  return serialize(accounts);
 }
 
 export async function createAccount(input: {
@@ -44,5 +47,5 @@ export async function createAccount(input: {
   });
 
   revalidatePath("/dashboard/accounts");
-  return account;
+  return serialize(account);
 }

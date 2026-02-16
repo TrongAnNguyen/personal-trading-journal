@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getTrades } from "@/lib/actions/trades";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingDown, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 export async function RecentActivity() {
   const trades = await getTrades();
@@ -49,13 +49,12 @@ export async function RecentActivity() {
                       <TrendingDown className="h-4 w-4" />
                     )}
                   </div>
-                                        <div>
-                                          <p className="text-sm font-bold">{trade.symbol}</p>
-                                          <p className="text-muted-foreground text-2.5 font-medium">
-                                            {new Date(trade.entryTime).toLocaleDateString()}
-                                          </p>
-                                        </div>
-                  
+                  <div>
+                    <p className="text-sm font-bold">{trade.symbol}</p>
+                    <p className="text-muted-foreground text-2.5 font-medium">
+                      {new Date(trade.entryTime).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
                 {trade.pnl !== null && (
                   <span

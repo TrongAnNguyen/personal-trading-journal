@@ -1,11 +1,13 @@
 "use server";
 
 import { prisma } from "@/lib/db";
+import { serialize } from "@/lib/utils";
 
 export async function getTags() {
-  return prisma.tag.findMany({
+  const tags = await prisma.tag.findMany({
     orderBy: { name: "asc" },
   });
+  return serialize(tags);
 }
 
 export async function createTag(input: {
@@ -21,5 +23,5 @@ export async function createTag(input: {
     },
   });
 
-  return tag;
+  return serialize(tag);
 }

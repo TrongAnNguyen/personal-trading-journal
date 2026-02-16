@@ -14,6 +14,7 @@ import {
 } from "@/types/trade";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
+import { serialize } from "@/lib/utils";
 
 export async function createTrade(input: CreateTradeInput) {
   const supabase = await createSupabaseServerClient();
@@ -63,7 +64,7 @@ export async function createTrade(input: CreateTradeInput) {
   revalidatePath("/dashboard/trades");
   revalidatePath("/dashboard");
 
-  return { success: true, trade };
+  return { success: true, trade: serialize(trade) };
 }
 
 export async function closeTrade(tradeId: string, input: CloseTradeInput) {
@@ -113,7 +114,7 @@ export async function closeTrade(tradeId: string, input: CloseTradeInput) {
   revalidatePath("/dashboard/trades");
   revalidatePath("/dashboard");
 
-  return { success: true, trade };
+  return { success: true, trade: serialize(trade) };
 }
 
 export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
@@ -189,7 +190,7 @@ export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
   revalidatePath(`/dashboard/trades/${tradeId}`);
   revalidatePath("/dashboard");
 
-  return { success: true, trade };
+  return { success: true, trade: serialize(trade) };
 }
 
 export async function deleteTrade(tradeId: string) {
@@ -220,22 +221,12 @@ export const getTrades = cache(async function (
     orderBy: { entryTime: "desc" },
   });
 
-  const trades: Trade[] = rawTrades.map((t: (typeof rawTrades)[number]) => ({
+  const trades: Trade[] = rawTrades.map((t: any) => ({
     ...t,
-    entryPrice: Number(t.entryPrice),
-    exitPrice: t.exitPrice ? Number(t.exitPrice) : null,
-    quantity: Number(t.quantity),
-    fees: t.fees ? Number(t.fees) : null,
-    stopLoss: t.stopLoss ? Number(t.stopLoss) : null,
-    takeProfit: t.takeProfit ? Number(t.takeProfit) : null,
-    pnl: t.pnl ? Number(t.pnl) : null,
-    riskReward: t.riskReward ? Number(t.riskReward) : null,
-    tags: t.tags?.map((tt: (typeof t.tags)[number]) => tt.tag) ?? [],
-    attachments: t.attachments ?? [],
-    checklist: t.checklist ?? [],
+    tags: t.tags?.map((tt: any) => tt.tag) ?? [],
   }));
 
-  return trades;
+  return serialize(trades);
 });
 
 export async function getTrade(tradeId: string) {
@@ -249,5 +240,5 @@ export async function getTrade(tradeId: string) {
     },
   });
 
-  return trade;
+  return serialize(trade);
 }
