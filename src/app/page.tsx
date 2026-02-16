@@ -5,16 +5,6 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top_left,var(--grad-1)_0%,transparent_80%),radial-gradient(ellipse_at_bottom_right,var(--grad-2)_0%,transparent_80%)] bg-background p-6 selection:bg-primary/30 selection:text-primary overflow-hidden">
-      <style jsx global>{`
-        :root {
-          --grad-1: oklch(0.7 0.1 230);
-          --grad-2: oklch(0.85 0.05 200);
-        }
-        .dark {
-          --grad-1: oklch(0.25 0.08 250);
-          --grad-2: oklch(0.3 0.12 220);
-        }
-      `}</style>
       {/* Decorative blurred circles */}
       <div className="absolute top-1/4 -left-20 h-96 w-96 rounded-full bg-primary/10 blur-[100px]" />
       <div className="absolute bottom-1/4 -right-20 h-96 w-96 rounded-full bg-accent/10 blur-[100px]" />

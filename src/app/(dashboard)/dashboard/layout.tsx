@@ -34,16 +34,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-[radial-gradient(ellipse_at_top_left,var(--grad-1)_0%,transparent_70%),radial-gradient(ellipse_at_bottom_right,var(--grad-2)_0%,transparent_70%)] bg-background text-foreground transition-colors duration-500">
-      <style jsx global>{`
-        :root {
-          --grad-1: oklch(0.7 0.1 230);
-          --grad-2: oklch(0.85 0.05 200);
-        }
-        .dark {
-          --grad-1: oklch(0.25 0.08 250);
-          --grad-2: oklch(0.3 0.12 220);
-        }
-      `}</style>
       {/* Sidebar Navigation */}
       <aside className="glass-morphism fixed left-4 top-4 bottom-4 z-50 hidden w-64 flex-col rounded-3xl p-6 lg:flex">
         <div className="mb-10 flex items-center gap-3 px-2">
