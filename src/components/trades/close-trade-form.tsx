@@ -220,7 +220,7 @@ export function CloseTradeForm({
                   <FormControl>
                     <Textarea
                       placeholder="What did you learn from this trade? What would you do differently?"
-                      className="min-h-[120px] resize-y"
+                      className="min-h-30 resize-y"
                       {...field}
                     />
                   </FormControl>

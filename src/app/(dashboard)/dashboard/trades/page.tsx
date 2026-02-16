@@ -1,12 +1,11 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { getTrades } from "@/lib/actions/trades";
-import { TradeList } from "@/components/trade/trade-list";
+import { TradeList } from "@/components/trades/trade-list";
+import { TradeListSkeleton } from "@/components/trades/trade-list-skeleton";
 import { Plus, Filter } from "lucide-react";
 
-export default async function TradesPage() {
-  const trades = await getTrades();
-
+export default function TradesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -32,7 +31,9 @@ export default async function TradesPage() {
       </div>
 
       {/* Trade List */}
-      <TradeList trades={trades} />
+      <Suspense fallback={<TradeListSkeleton />}>
+        <TradeList />
+      </Suspense>
     </div>
   );
 }

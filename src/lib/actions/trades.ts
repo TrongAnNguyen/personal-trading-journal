@@ -1,18 +1,19 @@
 "use server";
 
-import { prisma } from "@/lib/db";
-import {
-  createTradeSchema,
-  closeTradeSchema,
-  updateTradeSchema,
-  type CreateTradeInput,
-  type CloseTradeInput,
-  type UpdateTradeInput,
-  Trade,
-} from "@/types/trade";
 import { calculatePnL, calculateRiskReward } from "@/lib/calculations";
-import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/db";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import {
+  closeTradeSchema,
+  createTradeSchema,
+  Trade,
+  updateTradeSchema,
+  type CloseTradeInput,
+  type CreateTradeInput,
+  type UpdateTradeInput,
+} from "@/types/trade";
+import { revalidatePath } from "next/cache";
+import { cache } from "react";
 
 export async function createTrade(input: CreateTradeInput) {
   const supabase = await createSupabaseServerClient();
@@ -202,7 +203,7 @@ export async function deleteTrade(tradeId: string) {
   return { success: true };
 }
 
-export async function getTrades(
+export const getTrades = cache(async function (
   accountId?: string,
   status?: "OPEN" | "CLOSED",
 ) {
@@ -235,7 +236,7 @@ export async function getTrades(
   }));
 
   return trades;
-}
+});
 
 export async function getTrade(tradeId: string) {
   const trade = await prisma.trade.findUnique({

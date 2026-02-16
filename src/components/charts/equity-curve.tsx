@@ -30,7 +30,7 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-muted-foreground flex h-[300px] items-center justify-center">
+          <div className="text-muted-foreground flex h-75 items-center justify-center">
             No closed trades yet
           </div>
         </CardContent>
@@ -76,7 +76,7 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] w-full mt-4">
+        <div className="h-75 w-full mt-4">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={formattedData} margin={{ top: 5, right: 5, left: 10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="4 4" stroke="var(--border)" strokeOpacity={0.2} vertical={false} />

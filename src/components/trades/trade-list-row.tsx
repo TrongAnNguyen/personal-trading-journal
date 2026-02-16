@@ -46,7 +46,7 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
       <TableCell className="py-4 pl-6">
         <div className="flex flex-col">
           <span className="font-bold tracking-tight text-base">{trade.symbol}</span>
-          <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-wider">
+          <span className="text-muted-foreground text-2.5 font-bold uppercase tracking-wider">
             {trade.assetClass}
           </span>
         </div>
@@ -55,7 +55,7 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
         <Badge
           variant="outline"
           className={cn(
-            "rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider border-none shadow-sm",
+            "rounded-full px-2.5 py-0.5 text-2.5 font-bold uppercase tracking-wider border-none shadow-sm",
             trade.side === "LONG"
               ? "text-profit bg-profit/10"
               : "text-loss bg-loss/10"
@@ -99,7 +99,7 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
       <TableCell>
         <Badge
           variant={trade.status === "OPEN" ? "default" : "secondary"}
-          className="rounded-full text-[10px] font-bold uppercase tracking-wider"
+          className="rounded-full text-2.5 font-bold uppercase tracking-wider"
         >
           {trade.status}
         </Badge>

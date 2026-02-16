@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTrade } from "@/lib/actions/trades";
 import { Button } from "@/components/ui/button";
-import { CloseTradeForm } from "@/components/trade/close-trade-form";
+import { CloseTradeForm } from "@/components/trades/close-trade-form";
 import { ArrowLeft } from "lucide-react";
 
 interface CloseTradePageProps {

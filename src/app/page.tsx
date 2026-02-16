@@ -51,7 +51,7 @@ export default function Home() {
               { label: "Alpha", value: "Enhanced" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
+                <p className="text-2.5 font-bold text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
                 <p className="text-lg font-bold tracking-tight">{stat.value}</p>
               </div>
             ))}
@@ -59,7 +59,7 @@ export default function Home() {
         </div>
       </main>
       
-      <p className="mt-10 text-[10px] font-bold uppercase tracking-widest opacity-40">
+      <p className="mt-10 text-2.5 font-bold uppercase tracking-widest opacity-40">
         © 2026 Analytical Systems Corp • All Rights Reserved
       </p>
     </div>

@@ -38,7 +38,7 @@ export function WinLossChart({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-muted-foreground flex h-[200px] items-center justify-center">
+          <div className="text-muted-foreground flex h-50 items-center justify-center">
             No closed trades yet
           </div>
         </CardContent>
@@ -63,20 +63,20 @@ export function WinLossChart({
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div className="rounded-2xl bg-profit/10 p-4 text-center border border-profit/20 shadow-sm">
             <p className="text-2xl font-bold text-profit tracking-tight">{wins}</p>
-            <p className="text-[10px] font-bold text-profit/60 uppercase tracking-widest mt-1">
+            <p className="text-2.5 font-bold text-profit/60 uppercase tracking-widest mt-1">
               Wins
             </p>
-            <p className="text-[10px] font-medium text-muted-foreground mt-1">Avg: ${averageWin.toFixed(2)}</p>
+            <p className="text-2.5 font-medium text-muted-foreground mt-1">Avg: ${averageWin.toFixed(2)}</p>
           </div>
           <div className="rounded-2xl bg-loss/10 p-4 text-center border border-loss/20 shadow-sm">
             <p className="text-2xl font-bold text-loss tracking-tight">{losses}</p>
-            <p className="text-[10px] font-bold text-loss/60 uppercase tracking-widest mt-1">
+            <p className="text-2.5 font-bold text-loss/60 uppercase tracking-widest mt-1">
               Losses
             </p>
-            <p className="text-[10px] font-medium text-muted-foreground mt-1">Avg: ${averageLoss.toFixed(2)}</p>
+            <p className="text-2.5 font-medium text-muted-foreground mt-1">Avg: ${averageLoss.toFixed(2)}</p>
           </div>
         </div>
-        <div className="h-[150px] w-full mt-4">
+        <div className="h-37.5 w-full mt-4">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} layout="vertical" margin={{ top: 0, right: 30, left: 10, bottom: 0 }}>
               <XAxis type="number" stroke="var(--muted-foreground)" fontSize={10} fontWeight={500} axisLine={false} tickLine={false} />

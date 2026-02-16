@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { TradeForm } from "@/components/trade/trade-form";
+import { TradeForm } from "@/components/trades/trade-form";
 import { ArrowLeft } from "lucide-react";
 import { getAccounts } from "@/lib/actions/accounts";
 
@@ -18,7 +18,7 @@ export default async function NewTradePage() {
         </Button>
         <div>
           <h1 className="font-mono text-xl font-bold tracking-tighter uppercase">Execution_Input</h1>
-          <p className="font-mono text-[10px] text-white/40 uppercase">Log new entry into the encrypted journal stream</p>
+          <p className="font-mono text-2.5 text-white/40 uppercase">Log new entry into the encrypted journal stream</p>
         </div>
       </div>
 

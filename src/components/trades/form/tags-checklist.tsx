@@ -2,8 +2,8 @@
 
 import { useFormContext } from "react-hook-form";
 import { ListChecks, Tags } from "lucide-react";
-import { ChecklistManager } from "@/components/trade/checklist-manager";
-import { TagSelector } from "@/components/trade/tag-selector";
+import { ChecklistManager } from "@/components/trades/checklist-manager";
+import { TagSelector } from "@/components/trades/tag-selector";
 import {
   Card,
   CardContent,
