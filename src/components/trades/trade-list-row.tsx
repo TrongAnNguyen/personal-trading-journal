@@ -1,19 +1,28 @@
 "use client";
 
-import { format } from "date-fns";
-import { Eye, Trash2, Edit, X, Loader2, MoreHorizontal, TrendingUp, TrendingDown } from "lucide-react";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { TableCell, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import type { Trade } from "@/types/trade";
+import { format } from "date-fns";
+import {
+  Edit,
+  Eye,
+  Loader2,
+  MoreHorizontal,
+  Trash2,
+  TrendingDown,
+  TrendingUp,
+  X,
+} from "lucide-react";
+import Link from "next/link";
 
 interface TradeListRowProps {
   trade: Trade;
@@ -40,13 +49,20 @@ const formatPnL = (pnl: number | null | undefined) => {
   return formatted;
 };
 
-export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeListRowProps) {
+export function TradeListRow({
+  trade,
+  isPending,
+  deletingId,
+  onDelete,
+}: TradeListRowProps) {
   return (
-    <TableRow className="border-border/30 transition-colors hover:bg-primary/[0.02]">
+    <TableRow className="border-border/30 hover:bg-primary/2 transition-colors">
       <TableCell className="py-4 pl-6">
         <div className="flex flex-col">
-          <span className="font-bold tracking-tight text-base">{trade.symbol}</span>
-          <span className="text-muted-foreground text-2.5 font-bold uppercase tracking-wider">
+          <span className="text-base font-bold tracking-tight">
+            {trade.symbol}
+          </span>
+          <span className="text-muted-foreground text-2.5 font-bold tracking-wider uppercase">
             {trade.assetClass}
           </span>
         </div>
@@ -55,10 +71,10 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
         <Badge
           variant="outline"
           className={cn(
-            "rounded-full px-2.5 py-0.5 text-2.5 font-bold uppercase tracking-wider border-none shadow-sm",
+            "text-2.5 rounded-full border-none px-2.5 py-0.5 font-bold tracking-wider uppercase shadow-sm",
             trade.side === "LONG"
               ? "text-profit bg-profit/10"
-              : "text-loss bg-loss/10"
+              : "text-loss bg-loss/10",
           )}
         >
           {trade.side === "LONG" ? (
@@ -69,22 +85,20 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
           {trade.side}
         </Badge>
       </TableCell>
-      <TableCell className="font-medium tabular-nums text-sm">
+      <TableCell className="text-sm font-medium tabular-nums">
         {formatPrice(Number(trade.entryPrice))}
       </TableCell>
-      <TableCell className="font-medium tabular-nums text-sm text-muted-foreground">
+      <TableCell className="text-muted-foreground text-sm font-medium tabular-nums">
         {trade.exitPrice ? formatPrice(Number(trade.exitPrice)) : "—"}
       </TableCell>
-      <TableCell className="font-medium tabular-nums text-sm">
+      <TableCell className="text-sm font-medium tabular-nums">
         {formatPrice(Number(trade.quantity))}
       </TableCell>
       <TableCell>
         {trade.pnl !== null && trade.pnl !== undefined ? (
           <span
-            className={`font-bold tabular-nums text-sm ${
-              Number(trade.pnl) >= 0
-                ? "text-profit"
-                : "text-loss"
+            className={`text-sm font-bold tabular-nums ${
+              Number(trade.pnl) >= 0 ? "text-profit" : "text-loss"
             }`}
           >
             {formatPnL(Number(trade.pnl))}
@@ -93,13 +107,13 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
           <span className="text-muted-foreground">—</span>
         )}
       </TableCell>
-      <TableCell className="font-bold text-sm text-primary/80">
+      <TableCell className="text-primary/80 text-sm font-bold">
         {trade.riskReward ? `${trade.riskReward}R` : "—"}
       </TableCell>
       <TableCell>
         <Badge
           variant={trade.status === "OPEN" ? "default" : "secondary"}
-          className="rounded-full text-2.5 font-bold uppercase tracking-wider"
+          className="text-2.5 rounded-full font-bold tracking-wider uppercase"
         >
           {trade.status}
         </Badge>
@@ -110,7 +124,11 @@ export function TradeListRow({ trade, isPending, deletingId, onDelete }: TradeLi
       <TableCell className="pr-6">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl hover:bg-primary/10 transition-colors">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-primary/10 h-9 w-9 rounded-xl transition-colors"
+            >
               {isPending && deletingId === trade.id ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
