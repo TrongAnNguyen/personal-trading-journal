@@ -98,7 +98,7 @@ export function TradeListRow({
         {trade.exitPrice ? formatPrice(Number(trade.exitPrice)) : "—"}
       </TableCell>
       <TableCell className="text-sm font-medium tabular-nums">
-        {formatPrice(Number(trade.quantity))}
+        {formatPrice(Number(trade.volume))}
       </TableCell>
       <TableCell>
         {trade.pnl !== null && trade.pnl !== undefined ? (

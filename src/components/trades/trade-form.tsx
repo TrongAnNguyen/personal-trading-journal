@@ -38,7 +38,7 @@ export function TradeForm({ accounts }: TradeFormProps) {
       assetClass: "CRYPTO",
       side: "LONG",
       entryPrice: "" as unknown as number,
-      quantity: "" as unknown as number,
+      volume: "" as unknown as number,
       fees: 0,
       stopLoss: undefined,
       takeProfit: undefined,
@@ -79,7 +79,7 @@ export function TradeForm({ accounts }: TradeFormProps) {
             variant="outline"
             onClick={() => form.reset()}
             disabled={isPending || !hasAccounts}
-            className="font-bold border-white/10"
+            className="border-white/10 font-bold"
           >
             RESET_BUFFER
           </Button>
@@ -88,8 +88,8 @@ export function TradeForm({ accounts }: TradeFormProps) {
             disabled={isPending || !hasAccounts}
             className={
               selectedSide === "LONG"
-                ? "bg-profit text-black font-bold hover:bg-profit/90"
-                : "bg-loss text-white font-bold hover:bg-loss/90"
+                ? "bg-profit hover:bg-profit/90 font-bold text-black"
+                : "bg-loss hover:bg-loss/90 font-bold text-white"
             }
           >
             {isPending ? (
@@ -98,7 +98,9 @@ export function TradeForm({ accounts }: TradeFormProps) {
                 EXECUTING...
               </>
             ) : (
-              <>INITIATE {selectedSide === "LONG" ? "LONG" : "SHORT"} POSITION</>
+              <>
+                INITIATE {selectedSide === "LONG" ? "LONG" : "SHORT"} POSITION
+              </>
             )}
           </Button>
         </div>

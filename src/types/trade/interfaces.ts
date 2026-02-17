@@ -1,5 +1,12 @@
 import { Decimal } from "@prisma/client/runtime/client";
-import { AssetClass, TradeSide, TradeStatus, Emotion, TagType, AttachmentContext } from "./enums";
+import {
+  AssetClass,
+  TradeSide,
+  TradeStatus,
+  Emotion,
+  TagType,
+  AttachmentContext,
+} from "./enums";
 
 export interface Trade {
   id: string;
@@ -9,7 +16,7 @@ export interface Trade {
   side: TradeSide;
   entryPrice: number;
   exitPrice?: number | null;
-  quantity: number;
+  volume: number;
   fees?: number | null;
   stopLoss?: number | null;
   takeProfit?: number | null;

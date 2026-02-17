@@ -42,7 +42,7 @@ model Trade {
   side           TradeSide       @default(LONG)
   entryPrice     Decimal         @db.Decimal(18, 8)
   exitPrice      Decimal?        @db.Decimal(18, 8)
-  quantity       Decimal         @db.Decimal(18, 8)
+  volume         Decimal         @db.Decimal(18, 8)
   fees           Decimal?        @default(0) @db.Decimal(18, 8)
   stopLoss       Decimal?        @db.Decimal(18, 8)
   takeProfit     Decimal?        @db.Decimal(18, 8)

@@ -7,7 +7,7 @@ export const createTradeSchema = z.object({
   assetClass: z.nativeEnum(AssetClass),
   side: z.nativeEnum(TradeSide),
   entryPrice: z.coerce.number().positive("Entry price must be positive"),
-  quantity: z.coerce.number().positive("Quantity must be positive"),
+  volume: z.coerce.number().positive("Volume must be positive"),
   fees: z.coerce.number().min(0).optional().default(0),
   stopLoss: z.coerce.number().positive().optional(),
   takeProfit: z.coerce.number().positive().optional(),

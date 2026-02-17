@@ -34,7 +34,7 @@ export default async function TradeDetailPage({
 
   const entryPrice = Number(trade.entryPrice);
   const exitPrice = trade.exitPrice ? Number(trade.exitPrice) : null;
-  const quantity = Number(trade.quantity);
+  const volume = Number(trade.volume);
   const pnl = trade.pnl ? Number(trade.pnl) : null;
   const riskReward = trade.riskReward ? Number(trade.riskReward) : null;
 
@@ -152,8 +152,8 @@ export default async function TradeDetailPage({
                 </p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm">Quantity</p>
-                <p className="font-mono text-lg">{quantity.toLocaleString()}</p>
+                <p className="text-muted-foreground text-sm">Volume</p>
+                <p className="font-mono text-lg">{volume.toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-muted-foreground text-sm">Fees</p>
@@ -247,12 +247,12 @@ export default async function TradeDetailPage({
           <CardContent>
             {trade.tags && trade.tags.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {trade.tags.map((tt: (typeof trade.tags)[number]) => (
+                {trade.tags.map((tag) => (
                   <Badge
-                    key={tt.tag.id}
-                    style={{ backgroundColor: tt.tag.color ?? undefined }}
+                    key={tag.id}
+                    style={{ backgroundColor: tag.color ?? undefined }}
                   >
-                    {tt.tag.name}
+                    {tag.name}
                   </Badge>
                 ))}
               </div>

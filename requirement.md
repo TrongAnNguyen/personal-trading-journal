@@ -12,7 +12,7 @@ The goal is to develop a web-based **Trading Journal** application that helps tr
 
 - **Trade Logging:** A detailed form to capture:
 - **Asset Details:** Ticker symbol, Asset Class (Crypto, Stocks, Forex), and Position Side (Long/Short).
-- **Execution Data:** Entry/Exit prices, quantity, fees, and timestamps.
+- **Execution Data:** Entry/Exit prices, volume, fees, and timestamps.
 - **Status:** Automatic toggle between "Open" and "Closed" positions.
 
 - **Visual Evidence:** Support for uploading or linking screenshots (e.g., TradingView charts) for both entry and exit points.
@@ -46,13 +46,13 @@ The goal is to develop a web-based **Trading Journal** application that helps tr
 
 ## 3. Data Schema (High-Level)
 
-| Entity         | Description          | Key Fields                                                          |
-| -------------- | -------------------- | ------------------------------------------------------------------- |
-| **User**       | Identity management  | `id`, `email`, `password_hash`, `settings_json`                     |
-| **Account**    | Sub-portfolios       | `id`, `user_id`, `name`, `initial_balance`, `currency`              |
-| **Trade**      | The core transaction | `id`, `symbol`, `entry_price`, `exit_price`, `qty`, `pnl`, `status` |
-| **Tag**        | Classification       | `id`, `name`, `type` (Strategy/Emotion)                             |
-| **Attachment** | Visual proof         | `id`, `trade_id`, `image_url`, `context` (Entry/Exit)               |
+| Entity         | Description          | Key Fields                                                             |
+| -------------- | -------------------- | ---------------------------------------------------------------------- |
+| **User**       | Identity management  | `id`, `email`, `password_hash`, `settings_json`                        |
+| **Account**    | Sub-portfolios       | `id`, `user_id`, `name`, `initial_balance`, `currency`                 |
+| **Trade**      | The core transaction | `id`, `symbol`, `entry_price`, `exit_price`, `volume`, `pnl`, `status` |
+| **Tag**        | Classification       | `id`, `name`, `type` (Strategy/Emotion)                                |
+| **Attachment** | Visual proof         | `id`, `trade_id`, `image_url`, `context` (Entry/Exit)                  |
 
 ---
 
@@ -61,7 +61,7 @@ The goal is to develop a web-based **Trading Journal** application that helps tr
 The system will automatically calculate performance using the following formulas:
 
 - **Net Profit/Loss:**
-  $$PnL_{net} = ((Price_{exit} - Price_{entry}) \times Quantity) - Fees$$
+  $$PnL_{net} = (Volume \times (\frac{Price_{exit}}{Price_{entry}} - 1)) - Fees$$
 - **Actual Risk/Reward Ratio:**
   $$R/R = \frac{|Price_{exit} - Price_{entry}|}{|Price_{entry} - Price_{stoploss}|}$$
 - **Expectancy:**

@@ -29,7 +29,7 @@ export function ExecutionData({ disabled }: ExecutionDataProps) {
       <CardHeader className="pb-4">
         <CardTitle className="text-lg">Execution Data</CardTitle>
         <CardDescription>
-          Entry price, quantity, and risk management levels
+          Entry price, volume, and risk management levels
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -55,10 +55,10 @@ export function ExecutionData({ disabled }: ExecutionDataProps) {
 
         <FormField
           control={control}
-          name="quantity"
+          name="volume"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Quantity</FormLabel>
+              <FormLabel>Volume</FormLabel>
               <FormControl>
                 <Input
                   type="number"

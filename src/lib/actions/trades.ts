@@ -37,7 +37,7 @@ export async function createTrade(input: CreateTradeInput) {
       assetClass: validated.assetClass,
       side: validated.side,
       entryPrice: validated.entryPrice,
-      quantity: validated.quantity,
+      volume: validated.volume,
       fees: validated.fees ?? 0,
       stopLoss: validated.stopLoss,
       takeProfit: validated.takeProfit,
@@ -93,7 +93,7 @@ export async function closeTrade(tradeId: string, input: CloseTradeInput) {
   const pnl = calculatePnL({
     entryPrice: Number(existingTrade.entryPrice),
     exitPrice: validated.exitPrice,
-    quantity: Number(existingTrade.quantity),
+    volume: Number(existingTrade.volume),
     fees: Number(existingTrade.fees ?? 0) + (validated.fees ?? 0),
     side: existingTrade.side,
   });
@@ -154,7 +154,7 @@ export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
       pnl = calculatePnL({
         entryPrice: validated.entryPrice ?? Number(existingTrade.entryPrice),
         exitPrice: validated.exitPrice,
-        quantity: validated.quantity ?? Number(existingTrade.quantity),
+        volume: validated.volume ?? Number(existingTrade.volume),
         fees: validated.fees ?? Number(existingTrade.fees ?? 0),
         side: validated.side ?? existingTrade.side,
       });
@@ -181,7 +181,7 @@ export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
       ...(validated.exitPrice !== undefined && {
         exitPrice: validated.exitPrice,
       }),
-      ...(validated.quantity !== undefined && { quantity: validated.quantity }),
+      ...(validated.volume !== undefined && { volume: validated.volume }),
       ...(validated.fees !== undefined && { fees: validated.fees }),
       ...(validated.stopLoss !== undefined && { stopLoss: validated.stopLoss }),
       ...(validated.takeProfit !== undefined && {
@@ -313,7 +313,14 @@ export async function getTrade(tradeId: string) {
     },
   });
 
-  const serialized = serialize(trade);
+  if (!trade) return null;
+
+  const flattenedTrade = {
+    ...trade,
+    tags: trade.tags.map((t) => t.tag),
+  };
+
+  const serialized = serialize(flattenedTrade);
 
   try {
     if (serialized) {

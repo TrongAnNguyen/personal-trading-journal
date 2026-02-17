@@ -72,7 +72,7 @@ export function TradeListTable({ trades }: TradeListTableProps) {
               Exit
             </TableHead>
             <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
-              Qty
+              Vol
             </TableHead>
             <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
               PnL

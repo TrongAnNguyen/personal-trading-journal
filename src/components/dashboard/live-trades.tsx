@@ -70,7 +70,7 @@ export async function LiveTrades() {
                       ${Number(trade.entryPrice).toLocaleString()}
                     </p>
                     <p className="text-muted-foreground text-2.5 font-bold tracking-wider uppercase">
-                      Vol: {Number(trade.quantity).toLocaleString()}
+                      Vol: {Number(trade.volume).toLocaleString()}
                     </p>
                   </div>
                 </div>

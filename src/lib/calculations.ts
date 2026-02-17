@@ -7,24 +7,22 @@ import type {
 
 /**
  * Calculate Net PnL for a trade
- * Formula: PnL = ((exitPrice - entryPrice) * quantity) - fees
- * For SHORT: PnL = ((entryPrice - exitPrice) * quantity) - fees
+ * Formula: PnL = (volume * (exitPrice / entryPrice - 1)) - fees
+ * For SHORT: PnL = (volume * (1 - exitPrice / entryPrice)) - fees
  */
 export function calculatePnL(trade: {
   entryPrice: number;
   exitPrice?: number | null;
-  quantity: number;
+  volume: number;
   fees?: number | null;
   side: TradeSide;
 }): number | null {
   if (!trade.exitPrice) return null;
 
-  const priceDiff =
-    trade.side === "LONG"
-      ? trade.exitPrice - trade.entryPrice
-      : trade.entryPrice - trade.exitPrice;
+  const ratio = trade.exitPrice / trade.entryPrice;
+  const pnlMultiplier = trade.side === "LONG" ? ratio - 1 : 1 - ratio;
 
-  const grossPnL = priceDiff * trade.quantity;
+  const grossPnL = trade.volume * pnlMultiplier;
   const fees = trade.fees ?? 0;
 
   return grossPnL - fees;
