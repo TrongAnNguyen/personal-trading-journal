@@ -1,13 +1,4 @@
-"use client";
-
-import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { signOut, updatePassword } from "@/app/auth/actions";
-import { changePasswordSchema, type ChangePasswordInput } from "@/types/auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import {
   Card,
   CardContent,
@@ -15,183 +6,86 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
-import {
-  Loader2,
-  LogOut,
-  Shield,
-  CheckCircle2,
-  AlertCircle,
-} from "lucide-react";
+import { ListChecks, Shield, LogOut, Loader2 } from "lucide-react";
+import { DisciplineSettings } from "@/components/settings/discipline-settings";
+import { SecuritySettings } from "@/components/settings/security-settings";
+import { SessionSettings } from "@/components/settings/session-settings";
+import { Suspense } from "react";
 
-export default function SettingsPage() {
-  const [isPending, startTransition] = useTransition();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
-
-  const form = useForm<ChangePasswordInput>({
-    resolver: zodResolver(changePasswordSchema),
-    defaultValues: {
-      password: "",
-      confirmPassword: "",
-    },
-  });
-
-  const onUpdatePassword = async (data: ChangePasswordInput) => {
-    setMessage(null);
-    startTransition(async () => {
-      const result = await updatePassword(data);
-      if (result?.error) {
-        setMessage({ type: "error", text: result.error });
-      } else {
-        setMessage({ type: "success", text: "Password updated successfully" });
-        form.reset();
-      }
-    });
-  };
-
-  const onLogout = async () => {
-    setIsLoggingOut(true);
-    setMessage(null);
-    const result = await signOut();
-    if (result?.error) {
-      setMessage({ type: "error", text: result.error });
-      setIsLoggingOut(false);
-    }
-  };
-
+export default async function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account settings and preferences.
+        <h1 className="text-3xl font-bold tracking-tight uppercase">
+          USER_PARAMETERS
+        </h1>
+        <p className="text-muted-foreground text-xs uppercase">
+          Adjust account operational parameters and security protocols.
         </p>
       </div>
 
       <Separator />
 
-      {message && (
-        <div
-          className={`flex items-center gap-3 rounded-md p-4 ${
-            message.type === "success"
-              ? "bg-primary/10 text-primary border-primary/20 border"
-              : "bg-destructive/10 text-destructive border-destructive/20 border"
-          }`}
-        >
-          {message.type === "success" ? (
-            <CheckCircle2 className="h-5 w-5" />
-          ) : (
-            <AlertCircle className="h-5 w-5" />
-          )}
-          <p className="text-sm font-medium">{message.text}</p>
-        </div>
-      )}
-
       <div className="grid gap-6">
+        {/* Discipline Checklist */}
+        <Card className="border-white/5 bg-black/40">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <ListChecks className="text-primary h-5 w-5" />
+              <CardTitle className="font-mono text-lg uppercase">
+                Discipline Checklist
+              </CardTitle>
+            </div>
+            <CardDescription className="text-xs uppercase">
+              Rules to follow before executing every trade.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="text-primary/50 h-6 w-6 animate-spin" />
+                </div>
+              }
+            >
+              <DisciplineSettings />
+            </Suspense>
+          </CardContent>
+        </Card>
+
         {/* Security / Password */}
-        <Card>
+        <Card className="border-white/5 bg-black/40">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Shield className="text-primary h-5 w-5" />
-              <CardTitle>Security</CardTitle>
+              <CardTitle className="font-mono text-lg uppercase">
+                Security
+              </CardTitle>
             </div>
-            <CardDescription>
+            <CardDescription className="text-xs uppercase">
               Update your password to keep your account secure.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onUpdatePassword)}
-                className="max-w-md space-y-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>New Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="••••••"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm New Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="••••••"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" disabled={isPending}>
-                  {isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : (
-                    "Update Password"
-                  )}
-                </Button>
-              </form>
-            </Form>
+            <SecuritySettings />
           </CardContent>
         </Card>
 
         {/* Account / Logout */}
-        <Card className="border-destructive/50">
+        <Card className="border-destructive/20 bg-destructive/5">
           <CardHeader>
             <div className="text-destructive flex items-center gap-2">
               <LogOut className="h-5 w-5" />
-              <CardTitle>Session</CardTitle>
+              <CardTitle className="font-mono text-lg uppercase">
+                Session
+              </CardTitle>
             </div>
-            <CardDescription>
+            <CardDescription className="text-xs uppercase">
               Sign out of your account from this device.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button
-              variant="destructive"
-              onClick={onLogout}
-              disabled={isLoggingOut}
-            >
-              {isLoggingOut ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging out...
-                </>
-              ) : (
-                "Logout"
-              )}
-            </Button>
+            <SessionSettings />
           </CardContent>
         </Card>
       </div>

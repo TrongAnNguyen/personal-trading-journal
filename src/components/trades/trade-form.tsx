@@ -22,9 +22,10 @@ import { TagsAndChecklist } from "./form/tags-checklist";
 
 interface TradeFormProps {
   accounts: Account[];
+  initialChecklist?: string[];
 }
 
-export function TradeForm({ accounts }: TradeFormProps) {
+export function TradeForm({ accounts, initialChecklist = [] }: TradeFormProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -45,7 +46,7 @@ export function TradeForm({ accounts }: TradeFormProps) {
       emotionEntry: undefined,
       notes: "",
       tags: [],
-      checklist: [],
+      checklist: initialChecklist.map((text) => ({ text, checked: false })),
     },
   });
 

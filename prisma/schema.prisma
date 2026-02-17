@@ -16,6 +16,7 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   accounts  Account[]
+  checklistTemplates ChecklistTemplate[]
 
   @@map("users")
 }
@@ -111,10 +112,13 @@ model ChecklistItem {
 }
 
 model ChecklistTemplate {
-  id    String   @id @default(uuid())
-  name  String
-  items String[]
+  id     String   @id @default(uuid())
+  userId String
+  name   String   @default("Discipline Checklist")
+  items  String[]
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@map("checklist_templates")
 }
 
