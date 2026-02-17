@@ -1,6 +1,20 @@
 {
-  "experimental": { 
+  "hooks": {
+    "AfterAgent": [
+      {
+        "matcher": "write_file|replace",
+        "hooks": [
+          {
+            "name": "format-file",
+            "type": "command",
+            "command": "$GEMINI_PROJECT_DIR/.gemini/hooks/format-files.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "experimental": {
     "enableAgents": true,
-    "plan": true 
+    "plan": true
   }
 }
