@@ -1,9 +1,14 @@
 #!/bin/bash
 
-Check if prettier is installed locally or globally
+# Check if prettier is installed locally or globally
 if npx prettier --version > /dev/null 2>&1; then
-    echo "Running Prettier on all files..."
-    npx prettier --write $(git diff --name-only --diff-filter=d | grep -E '\.(ts|tsx|md|js|css)$' | xargs)
+    FILES=$(git diff --name-only --diff-filter=d | grep -E '\.(ts|tsx|md|js|css)$' | xargs)
+    if [ -n "$FILES" ]; then
+        echo "Running Prettier on changed files..."
+        npx prettier --write $FILES
+    else
+        echo "No files to format."
+    fi
 else
     echo "Error: Prettier is not installed. Run 'npm install --save-dev --save-exact prettier' first."
     exit 1
