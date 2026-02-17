@@ -1,9 +1,9 @@
-import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { getTrades } from "@/lib/actions/trades";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingDown, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 export async function LiveTrades() {
   const openTrades = await getTrades(undefined, "OPEN");
@@ -41,7 +41,7 @@ export async function LiveTrades() {
           {openTrades.slice(0, 5).map((trade) => (
             <Card
               key={trade.id}
-              className="group hover:bg-primary/5 hover:border-primary/20 border-transparent transition-all duration-300"
+              className="group border-transparent transition-all duration-300"
             >
               <div className="flex items-center justify-between px-6 py-4">
                 <div className="flex items-center gap-6">
@@ -58,25 +58,23 @@ export async function LiveTrades() {
                       <TrendingDown className="h-6 w-6" />
                     )}
                   </div>
-                                        <div>
-                                          <p className="text-xl font-bold tracking-tight">
-                                            {trade.symbol}
-                                          </p>
-                                          <p className="text-muted-foreground text-2.5 font-bold tracking-wider uppercase">
-                                            {trade.assetClass} • {trade.side}
-                                          </p>
-                                        </div>
-                  
+                  <div>
+                    <p className="text-xl font-bold tracking-tight">
+                      {trade.symbol}
+                    </p>
+                    <p className="text-muted-foreground text-2.5 font-bold tracking-wider uppercase">
+                      {trade.assetClass} • {trade.side}
+                    </p>
+                  </div>
                 </div>
                 <div className="text-right">
-                                        <p className="text-xl font-bold tracking-tight">
-                                          ${Number(trade.entryPrice).toLocaleString()}
-                                        </p>
-                                        <p className="text-muted-foreground text-2.5 font-bold tracking-wider uppercase">
-                                          Vol: {Number(trade.quantity).toLocaleString()}
-                                        </p>
-                                      </div>
-                  
+                  <p className="text-xl font-bold tracking-tight">
+                    ${Number(trade.entryPrice).toLocaleString()}
+                  </p>
+                  <p className="text-muted-foreground text-2.5 font-bold tracking-wider uppercase">
+                    Vol: {Number(trade.quantity).toLocaleString()}
+                  </p>
+                </div>
               </div>
             </Card>
           ))}

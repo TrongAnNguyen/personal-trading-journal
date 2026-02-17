@@ -1,11 +1,12 @@
 "use server";
 
 import { prisma } from "@/lib/db";
-import { revalidatePath } from "next/cache";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { serialize } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
+import { cache } from "react";
 
-export async function getAccounts() {
+export const getAccounts = cache(async function () {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -21,7 +22,7 @@ export async function getAccounts() {
   });
 
   return serialize(accounts);
-}
+});
 
 export async function createAccount(input: {
   name: string;

@@ -1,10 +1,9 @@
 import { AccountCard } from "@/components/accounts/account-card";
 import { EmptyState } from "@/components/accounts/empty-state";
 import { getAccounts } from "@/lib/actions/accounts";
-import { cache } from "react";
 
 export async function AccountList() {
-  const accounts = await getAccountsCached();
+  const accounts = await getAccounts();
 
   if (accounts.length === 0) {
     return <EmptyState />;
@@ -18,8 +17,3 @@ export async function AccountList() {
     </div>
   );
 }
-
-const getAccountsCached = cache(async () => {
-  const accounts = await getAccounts();
-  return accounts;
-});
