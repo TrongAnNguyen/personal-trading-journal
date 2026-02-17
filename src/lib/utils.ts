@@ -46,3 +46,38 @@ export function serialize<T>(data: T): T {
 
   return data;
 }
+
+/**
+ * Recursively revives ISO date strings into Date objects.
+ */
+export function reviveDates(data: any): any {
+  if (data === null || data === undefined) {
+    return data;
+  }
+
+  // Handle ISO Date strings
+  if (
+    typeof data === "string" &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/.test(data)
+  ) {
+    return new Date(data);
+  }
+
+  // Handle Arrays
+  if (Array.isArray(data)) {
+    return data.map((item) => reviveDates(item));
+  }
+
+  // Handle Objects
+  if (typeof data === "object") {
+    const revived: any = {};
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        revived[key] = reviveDates(data[key]);
+      }
+    }
+    return revived;
+  }
+
+  return data;
+}

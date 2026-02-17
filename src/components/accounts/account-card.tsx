@@ -22,7 +22,7 @@ export function AccountCard({ account }: AccountCardProps) {
   }).format(Number(account.initialBalance));
 
   return (
-    <Card className="hover:bg-accent/5 transition-colors">
+    <Card className="transition-colors">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2 text-lg font-medium">
           <Wallet className="text-muted-foreground h-5 w-5" />

@@ -1,8 +1,11 @@
 "use server";
 
+import { CacheTTL } from "@/constants";
 import { calculatePnL, calculateRiskReward } from "@/lib/calculations";
 import { prisma } from "@/lib/db";
+import { redis } from "@/lib/redis";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { serialize } from "@/lib/utils";
 import {
   closeTradeSchema,
   createTradeSchema,
@@ -14,7 +17,6 @@ import {
 } from "@/types/trade";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
-import { serialize } from "@/lib/utils";
 
 export async function createTrade(input: CreateTradeInput) {
   const supabase = await createSupabaseServerClient();
@@ -61,6 +63,7 @@ export async function createTrade(input: CreateTradeInput) {
     },
   });
 
+  await redis.delPrefix(`user:${user.id}:trades:`);
   revalidatePath("/dashboard/trades");
   revalidatePath("/dashboard");
 
@@ -68,6 +71,15 @@ export async function createTrade(input: CreateTradeInput) {
 }
 
 export async function closeTrade(tradeId: string, input: CloseTradeInput) {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
   const validated = closeTradeSchema.parse(input);
 
   const existingTrade = await prisma.trade.findUnique({
@@ -111,6 +123,7 @@ export async function closeTrade(tradeId: string, input: CloseTradeInput) {
     },
   });
 
+  await redis.delPrefix(`user:${user.id}:trades:`);
   revalidatePath("/dashboard/trades");
   revalidatePath("/dashboard");
 
@@ -118,6 +131,15 @@ export async function closeTrade(tradeId: string, input: CloseTradeInput) {
 }
 
 export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
   const validated = updateTradeSchema.parse(input);
 
   let pnl: number | null = null;
@@ -186,6 +208,7 @@ export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
     },
   });
 
+  await redis.delPrefix(`user:${user.id}:trades:`);
   revalidatePath("/dashboard/trades");
   revalidatePath(`/dashboard/trades/${tradeId}`);
   revalidatePath("/dashboard");
@@ -194,10 +217,20 @@ export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
 }
 
 export async function deleteTrade(tradeId: string) {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
   await prisma.trade.delete({
     where: { id: tradeId },
   });
 
+  await redis.delPrefix(`user:${user.id}:trades:`);
   revalidatePath("/dashboard/trades");
   revalidatePath("/dashboard");
 
@@ -208,6 +241,22 @@ export const getTrades = cache(async function (
   accountId?: string,
   status?: "OPEN" | "CLOSED",
 ) {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return serialize([]);
+
+  const cacheKey = `user:${user.id}:trades:acc:${accountId || "all"}:stat:${status || "all"}`;
+
+  try {
+    const cached = await redis.get<Trade[]>(cacheKey);
+    if (cached) return cached;
+  } catch (error) {
+    console.error("Cache retrieval failed:", error);
+  }
+
   const rawTrades = await prisma.trade.findMany({
     where: {
       ...(accountId && { accountId }),
@@ -226,10 +275,34 @@ export const getTrades = cache(async function (
     tags: t.tags?.map((tt: any) => tt.tag) ?? [],
   }));
 
-  return serialize(trades);
+  const serialized = serialize(trades);
+
+  try {
+    await redis.set(cacheKey, serialized, CacheTTL.OneWeek);
+  } catch (error) {
+    console.error("Cache storage failed:", error);
+  }
+
+  return serialized;
 });
 
 export async function getTrade(tradeId: string) {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const cacheKey = `user:${user.id}:trades:id:${tradeId}`;
+
+  try {
+    const cached = await redis.get<Trade>(cacheKey);
+    if (cached) return cached;
+  } catch (error) {
+    console.error("Cache retrieval failed:", error);
+  }
+
   const trade = await prisma.trade.findUnique({
     where: { id: tradeId },
     include: {
@@ -240,5 +313,15 @@ export async function getTrade(tradeId: string) {
     },
   });
 
-  return serialize(trade);
+  const serialized = serialize(trade);
+
+  try {
+    if (serialized) {
+      await redis.set(cacheKey, serialized, CacheTTL.OneWeek);
+    }
+  } catch (error) {
+    console.error("Cache storage failed:", error);
+  }
+
+  return serialized;
 }

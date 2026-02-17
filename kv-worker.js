@@ -69,8 +69,24 @@ export default {
 
         case "DELETE": {
           const key = url.searchParams.get("key");
+          const prefix = url.searchParams.get("prefix");
+
+          if (prefix) {
+            const list = await env.REDIS.list({ prefix });
+            for (const item of list.keys) {
+              await env.REDIS.delete(item.name);
+            }
+            return jsonResponse({
+              message: `Keys with prefix '${prefix}' deleted successfully`,
+              prefix,
+            });
+          }
+
           if (!key) {
-            return jsonResponse({ error: "Missing 'key' parameter" }, 400);
+            return jsonResponse(
+              { error: "Missing 'key' or 'prefix' parameter" },
+              400,
+            );
           }
 
           await env.REDIS.delete(key);
