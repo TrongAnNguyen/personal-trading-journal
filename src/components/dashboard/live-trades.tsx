@@ -39,44 +39,43 @@ export async function LiveTrades() {
       ) : (
         <div className="grid gap-4">
           {openTrades.slice(0, 5).map((trade) => (
-            <Card
-              key={trade.id}
-              className="group border-transparent transition-all duration-300"
-            >
-              <div className="flex items-center justify-between px-6 py-4">
-                <div className="flex items-center gap-6">
-                  <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-xl shadow-lg transition-all ${
-                      trade.side === "LONG"
-                        ? "bg-profit/20 text-profit shadow-green-500/10"
-                        : "bg-loss/20 text-loss shadow-red-500/10"
-                    }`}
-                  >
-                    {trade.side === "LONG" ? (
-                      <TrendingUp className="h-6 w-6" />
-                    ) : (
-                      <TrendingDown className="h-6 w-6" />
-                    )}
+            <Link key={trade.id} href={`/dashboard/trades/${trade.id}`}>
+              <Card className="group border-transparent transition-all duration-300">
+                <div className="flex items-center justify-between px-6 py-4">
+                  <div className="flex items-center gap-6">
+                    <div
+                      className={`flex h-12 w-12 items-center justify-center rounded-xl shadow-lg transition-all ${
+                        trade.side === "LONG"
+                          ? "bg-profit/20 text-profit shadow-green-500/10"
+                          : "bg-loss/20 text-loss shadow-red-500/10"
+                      }`}
+                    >
+                      {trade.side === "LONG" ? (
+                        <TrendingUp className="h-6 w-6" />
+                      ) : (
+                        <TrendingDown className="h-6 w-6" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold tracking-tight">
+                        {trade.symbol}
+                      </p>
+                      <p className="text-muted-foreground text-2.5 font-bold tracking-wider uppercase">
+                        {trade.assetClass} • {trade.side}
+                      </p>
+                    </div>
                   </div>
-                  <div>
+                  <div className="text-right">
                     <p className="text-xl font-bold tracking-tight">
-                      {trade.symbol}
+                      ${Number(trade.entryPrice).toLocaleString()}
                     </p>
                     <p className="text-muted-foreground text-2.5 font-bold tracking-wider uppercase">
-                      {trade.assetClass} • {trade.side}
+                      Vol: {Number(trade.quantity).toLocaleString()}
                     </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-xl font-bold tracking-tight">
-                    ${Number(trade.entryPrice).toLocaleString()}
-                  </p>
-                  <p className="text-muted-foreground text-2.5 font-bold tracking-wider uppercase">
-                    Vol: {Number(trade.quantity).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
       )}

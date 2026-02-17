@@ -23,6 +23,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface TradeListRowProps {
   trade: Trade;
@@ -55,8 +56,13 @@ export function TradeListRow({
   deletingId,
   onDelete,
 }: TradeListRowProps) {
+  const router = useRouter();
+
   return (
-    <TableRow className="border-border/30 hover:bg-primary/2 transition-colors">
+    <TableRow
+      className="border-border/30 hover:bg-primary/2 cursor-pointer transition-colors"
+      onClick={() => router.push(`/dashboard/trades/${trade.id}`)}
+    >
       <TableCell className="py-4 pl-6">
         <div className="flex flex-col">
           <span className="text-base font-bold tracking-tight">
@@ -128,6 +134,7 @@ export function TradeListRow({
               variant="ghost"
               size="icon"
               className="hover:bg-primary/10 h-9 w-9 rounded-xl transition-colors"
+              onClick={(e) => e.stopPropagation()}
             >
               {isPending && deletingId === trade.id ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
