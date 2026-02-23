@@ -10,19 +10,37 @@ import {
 
 export function TradeListSkeleton() {
   return (
-    <div className="glass-morphism rounded-3xl overflow-hidden">
+    <div className="glass-morphism overflow-hidden rounded-3xl">
       <Table>
         <TableHeader className="bg-primary/5">
-          <TableRow className="hover:bg-transparent border-border/30">
-            <TableHead className="w-30 font-bold text-xs uppercase tracking-wider text-muted-foreground py-5 pl-6">Symbol</TableHead>
-            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Side</TableHead>
-            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Entry</TableHead>
-            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Exit</TableHead>
-            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Qty</TableHead>
-            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">PnL</TableHead>
-            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">R:R</TableHead>
-            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Status</TableHead>
-            <TableHead className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Date</TableHead>
+          <TableRow className="border-border/30 hover:bg-transparent">
+            <TableHead className="text-muted-foreground w-30 py-5 pl-6 text-xs font-bold tracking-wider uppercase">
+              Symbol
+            </TableHead>
+            <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
+              Side
+            </TableHead>
+            <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
+              Entry
+            </TableHead>
+            <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
+              Exit
+            </TableHead>
+            <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
+              Qty
+            </TableHead>
+            <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
+              PnL
+            </TableHead>
+            <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
+              R:R
+            </TableHead>
+            <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
+              Status
+            </TableHead>
+            <TableHead className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
+              Date
+            </TableHead>
             <TableHead className="w-20 pr-6"></TableHead>
           </TableRow>
         </TableHeader>
@@ -57,7 +75,7 @@ export function TradeListSkeleton() {
                 <Skeleton className="h-5 w-24" />
               </TableCell>
               <TableCell className="pr-6">
-                <Skeleton className="h-8 w-8 rounded-lg ml-auto" />
+                <Skeleton className="ml-auto h-8 w-8 rounded-lg" />
               </TableCell>
             </TableRow>
           ))}

@@ -54,32 +54,51 @@ export function WinLossChart({
   return (
     <Card className="glass-card overflow-hidden">
       <CardHeader className="pb-4">
-        <CardTitle className="text-sm font-bold tracking-tight flex items-center gap-2">
-          <BarChart3 className="h-4 w-4 text-primary" />
+        <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
+          <BarChart3 className="text-primary h-4 w-4" />
           Win/Loss Distribution
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="mb-6 grid grid-cols-2 gap-4">
-          <div className="rounded-2xl bg-profit/10 p-4 text-center border border-profit/20 shadow-sm">
-            <p className="text-2xl font-bold text-profit tracking-tight">{wins}</p>
-            <p className="text-2.5 font-bold text-profit/60 uppercase tracking-widest mt-1">
+          <div className="bg-profit/10 border-profit/20 rounded-2xl border p-4 text-center shadow-sm">
+            <p className="text-profit text-2xl font-bold tracking-tight">
+              {wins}
+            </p>
+            <p className="text-2.5 text-profit/60 mt-1 font-bold tracking-widest uppercase">
               Wins
             </p>
-            <p className="text-2.5 font-medium text-muted-foreground mt-1">Avg: ${averageWin.toFixed(2)}</p>
+            <p className="text-2.5 text-muted-foreground mt-1 font-medium">
+              Avg: ${averageWin.toFixed(2)}
+            </p>
           </div>
-          <div className="rounded-2xl bg-loss/10 p-4 text-center border border-loss/20 shadow-sm">
-            <p className="text-2xl font-bold text-loss tracking-tight">{losses}</p>
-            <p className="text-2.5 font-bold text-loss/60 uppercase tracking-widest mt-1">
+          <div className="bg-loss/10 border-loss/20 rounded-2xl border p-4 text-center shadow-sm">
+            <p className="text-loss text-2xl font-bold tracking-tight">
+              {losses}
+            </p>
+            <p className="text-2.5 text-loss/60 mt-1 font-bold tracking-widest uppercase">
               Losses
             </p>
-            <p className="text-2.5 font-medium text-muted-foreground mt-1">Avg: ${averageLoss.toFixed(2)}</p>
+            <p className="text-2.5 text-muted-foreground mt-1 font-medium">
+              Avg: ${averageLoss.toFixed(2)}
+            </p>
           </div>
         </div>
-        <div className="h-37.5 w-full mt-4">
+        <div className="mt-4 h-37.5 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} layout="vertical" margin={{ top: 0, right: 30, left: 10, bottom: 0 }}>
-              <XAxis type="number" stroke="var(--muted-foreground)" fontSize={10} fontWeight={500} axisLine={false} tickLine={false} />
+            <BarChart
+              data={data}
+              layout="vertical"
+              margin={{ top: 0, right: 30, left: 10, bottom: 0 }}
+            >
+              <XAxis
+                type="number"
+                stroke="var(--muted-foreground)"
+                fontSize={10}
+                fontWeight={500}
+                axisLine={false}
+                tickLine={false}
+              />
               <YAxis
                 dataKey="name"
                 type="category"
@@ -98,7 +117,7 @@ export function WinLossChart({
                   borderRadius: "12px",
                   fontSize: "12px",
                   fontWeight: "600",
-                  boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
+                  boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1)",
                 }}
                 cursor={{ fill: "rgba(0,0,0,0.02)", radius: 10 }}
                 formatter={(value, name) => [
@@ -108,9 +127,11 @@ export function WinLossChart({
               />
               <Bar dataKey="count" radius={[0, 10, 10, 0]} barSize={24}>
                 {data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={entry.name === "Wins" ? "var(--profit)" : "var(--loss)"} 
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      entry.name === "Wins" ? "var(--profit)" : "var(--loss)"
+                    }
                     fillOpacity={0.8}
                   />
                 ))}

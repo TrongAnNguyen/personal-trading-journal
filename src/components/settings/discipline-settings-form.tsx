@@ -1,7 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { Plus, X, GripVertical, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  Plus,
+  X,
+  GripVertical,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +18,9 @@ interface DisciplineSettingsFormProps {
   initialItems: string[];
 }
 
-export function DisciplineSettingsForm({ initialItems }: DisciplineSettingsFormProps) {
+export function DisciplineSettingsForm({
+  initialItems,
+}: DisciplineSettingsFormProps) {
   const [items, setItems] = React.useState<string[]>(initialItems);
   const [newItemText, setNewItemText] = React.useState("");
   const [isPending, startTransition] = React.useTransition();

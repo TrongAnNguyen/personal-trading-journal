@@ -49,7 +49,7 @@ export function SecuritySettings() {
     <div className="space-y-4">
       {message && (
         <div
-          className={`flex items-center gap-3 rounded-md p-4 mb-4 ${
+          className={`mb-4 flex items-center gap-3 rounded-md p-4 ${
             message.type === "success"
               ? "bg-primary/10 text-primary border-primary/20 border"
               : "bg-destructive/10 text-destructive border-destructive/20 border"
@@ -74,13 +74,15 @@ export function SecuritySettings() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs uppercase">New Password</FormLabel>
+                <FormLabel className="text-xs uppercase">
+                  New Password
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="password"
                     placeholder="••••••"
                     {...field}
-                    className="bg-black/40 border-white/10 rounded-none h-11"
+                    className="h-11 rounded-none border-white/10 bg-black/40"
                   />
                 </FormControl>
                 <FormMessage />
@@ -92,13 +94,15 @@ export function SecuritySettings() {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs uppercase">Confirm New Password</FormLabel>
+                <FormLabel className="text-xs uppercase">
+                  Confirm New Password
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="password"
                     placeholder="••••••"
                     {...field}
-                    className="bg-black/40 border-white/10 rounded-none h-11"
+                    className="h-11 rounded-none border-white/10 bg-black/40"
                   />
                 </FormControl>
                 <FormMessage />

@@ -51,7 +51,7 @@ export async function MetricsGrid() {
           <div className="text-4xl font-bold tracking-tight">
             {metrics.winRate}%
           </div>
-          <p className="text-muted-foreground mt-2 text-2.5 font-bold tracking-wide">
+          <p className="text-muted-foreground text-2.5 mt-2 font-bold tracking-wide">
             {metrics.winningTrades} WIN / {metrics.losingTrades} LOSS
           </p>
         </CardContent>
@@ -70,7 +70,7 @@ export async function MetricsGrid() {
           <div className="text-primary text-4xl font-bold tracking-tight">
             {metrics.profitFactor}
           </div>
-          <p className="text-muted-foreground mt-2 text-2.5 font-bold tracking-wide">
+          <p className="text-muted-foreground text-2.5 mt-2 font-bold tracking-wide">
             PROFIT / LOSS RATIO
           </p>
         </CardContent>
@@ -89,7 +89,7 @@ export async function MetricsGrid() {
           <div className="text-loss text-4xl font-bold tracking-tight">
             -${metrics.maxDrawdown.toLocaleString()}
           </div>
-          <p className="text-muted-foreground mt-2 text-2.5 font-bold tracking-wide uppercase">
+          <p className="text-muted-foreground text-2.5 mt-2 font-bold tracking-wide uppercase">
             Risk exposure
           </p>
         </CardContent>

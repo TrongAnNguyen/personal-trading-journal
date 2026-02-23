@@ -22,7 +22,7 @@ export function SessionSettings() {
   return (
     <div className="space-y-4">
       {error && (
-        <div className="bg-destructive/10 text-destructive border-destructive/20 border flex items-center gap-3 rounded-md p-4">
+        <div className="bg-destructive/10 text-destructive border-destructive/20 flex items-center gap-3 rounded-md border p-4">
           <AlertCircle className="h-5 w-5" />
           <p className="text-sm font-medium">{error}</p>
         </div>

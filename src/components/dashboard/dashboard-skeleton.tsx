@@ -38,9 +38,9 @@ export function LiveTradesSkeleton() {
                   <Skeleton className="h-3 w-32" />
                 </div>
               </div>
-              <div className="text-right space-y-2">
-                <Skeleton className="h-6 w-24 ml-auto" />
-                <Skeleton className="h-3 w-32 ml-auto" />
+              <div className="space-y-2 text-right">
+                <Skeleton className="ml-auto h-6 w-24" />
+                <Skeleton className="ml-auto h-3 w-32" />
               </div>
             </div>
           </Card>

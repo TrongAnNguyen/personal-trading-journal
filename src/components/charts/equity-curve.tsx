@@ -54,11 +54,13 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <CardTitle className="text-sm font-bold tracking-tight flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-tight">
+              <TrendingUp className="text-primary h-4 w-4" />
               Equity Curve
             </CardTitle>
-            <p className="text-xs text-muted-foreground font-medium">Performance analytics and trend tracking</p>
+            <p className="text-muted-foreground text-xs font-medium">
+              Performance analytics and trend tracking
+            </p>
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold tracking-tight">
@@ -76,10 +78,18 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-75 w-full mt-4">
+        <div className="mt-4 h-75 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={formattedData} margin={{ top: 5, right: 5, left: 10, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="4 4" stroke="var(--border)" strokeOpacity={0.2} vertical={false} />
+            <LineChart
+              data={formattedData}
+              margin={{ top: 5, right: 5, left: 10, bottom: 5 }}
+            >
+              <CartesianGrid
+                strokeDasharray="4 4"
+                stroke="var(--border)"
+                strokeOpacity={0.2}
+                vertical={false}
+              />
               <XAxis
                 dataKey="date"
                 stroke="var(--muted-foreground)"
@@ -106,7 +116,7 @@ export function EquityCurveChart({ data }: EquityCurveChartProps) {
                   borderRadius: "12px",
                   fontSize: "12px",
                   fontWeight: "600",
-                  boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1)"
+                  boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.1)",
                 }}
                 itemStyle={{ padding: "0px" }}
                 labelFormatter={(label) => `Date: ${label}`}
