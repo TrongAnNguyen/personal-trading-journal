@@ -1,24 +1,40 @@
 "use client";
 
-import { useState, useOptimistic, useTransition, useMemo } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BrainCircuit, Search, Plus, Network, Clock, Trash, Loader2 } from "lucide-react";
-import { createNote, deleteNote, type NoteWithMeta } from "@/lib/actions/knowledge-base";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  createNote,
+  deleteNote,
+  type NoteWithMeta,
+} from "@/lib/actions/knowledge-base";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { format } from "date-fns";
+import {
+  BrainCircuit,
+  Clock,
+  Loader2,
+  Network,
+  Plus,
+  Search,
+  Trash,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useMemo, useOptimistic, useState, useTransition } from "react";
 import GraphView from "../graph-view";
 
-export default function KnowledgeBaseSidebar({ initialNotes }: { initialNotes: NoteWithMeta[] }) {
+export default function KnowledgeBaseSidebar({
+  initialNotes,
+}: {
+  initialNotes: NoteWithMeta[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [isGraphOpen, setIsGraphOpen] = useState(false);
-  
+
   const currentId = pathname.split("/").pop();
   const q = searchParams.get("q") || "";
 
@@ -28,12 +44,12 @@ export default function KnowledgeBaseSidebar({ initialNotes }: { initialNotes: N
       if (type === "add") return [note, ...state];
       if (type === "delete") return state.filter((n) => n.id !== note.id);
       return state;
-    }
+    },
   );
 
   const filteredNotes = useMemo(() => {
     return optimisticNotes.filter((n) =>
-      n.title.toLowerCase().includes(q.toLowerCase())
+      n.title.toLowerCase().includes(q.toLowerCase()),
     );
   }, [optimisticNotes, q]);
 
@@ -63,7 +79,7 @@ export default function KnowledgeBaseSidebar({ initialNotes }: { initialNotes: N
       });
 
       if (res.data) {
-        router.push(`/dashboard/knowledge-base/\${res.data.id}`);
+        router.push(`/dashboard/knowledge-base/${res.data.id}`);
       }
     });
   };
@@ -89,14 +105,17 @@ export default function KnowledgeBaseSidebar({ initialNotes }: { initialNotes: N
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 font-semibold">
               <BrainCircuit className="text-primary h-5 w-5" />
-              <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+              <span className="from-foreground to-foreground/70 bg-gradient-to-r bg-clip-text text-transparent">
                 Second Brain
               </span>
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className={cn("h-8 w-8 rounded-full", isGraphOpen && "bg-primary text-primary-foreground")}
+              className={cn(
+                "h-8 w-8 rounded-full",
+                isGraphOpen && "bg-primary text-primary-foreground",
+              )}
               onClick={() => setIsGraphOpen(!isGraphOpen)}
             >
               <Network className="h-4 w-4" />
@@ -146,19 +165,23 @@ export default function KnowledgeBaseSidebar({ initialNotes }: { initialNotes: N
                 return (
                   <Link
                     key={note.id}
-                    href={`/dashboard/knowledge-base/\${note.id}`}
+                    href={`/dashboard/knowledge-base/${note.id}`}
                     className={cn(
                       "group relative flex flex-col rounded-2xl p-3 transition-all duration-200",
-                      isActive 
-                        ? "bg-primary/10 ring-1 ring-primary/20 shadow-sm" 
-                        : "hover:bg-muted/50"
+                      isActive
+                        ? "bg-primary/10 ring-primary/20 shadow-sm ring-1"
+                        : "hover:bg-muted/50",
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <span className={cn(
-                        "flex-1 truncate text-sm font-medium",
-                        isActive ? "text-primary" : "text-foreground/80 group-hover:text-foreground"
-                      )}>
+                      <span
+                        className={cn(
+                          "flex-1 truncate text-sm font-medium",
+                          isActive
+                            ? "text-primary"
+                            : "text-foreground/80 group-hover:text-foreground",
+                        )}
+                      >
                         {note.title || "Untitled Note"}
                       </span>
                       <Button
@@ -167,7 +190,7 @@ export default function KnowledgeBaseSidebar({ initialNotes }: { initialNotes: N
                         className="h-6 w-6 shrink-0 opacity-0 group-hover:opacity-100"
                         onClick={(e) => handleDeleteNote(e, note.id)}
                       >
-                        <Trash className="text-destructive/70 h-3 w-3 hover:text-destructive" />
+                        <Trash className="text-destructive/70 hover:text-destructive h-3 w-3" />
                       </Button>
                     </div>
                     <div className="mt-1 flex items-center gap-1.5 text-[10px] opacity-50">
@@ -189,11 +212,11 @@ export default function KnowledgeBaseSidebar({ initialNotes }: { initialNotes: N
       </aside>
 
       {isGraphOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 p-8 backdrop-blur-xl animate-in fade-in zoom-in duration-300">
-          <div className="bg-card h-full w-full overflow-hidden rounded-3xl border shadow-2xl relative">
-            <GraphView 
-              selectedId={currentId || null} 
-              onClose={() => setIsGraphOpen(false)} 
+        <div className="bg-background/95 animate-in fade-in zoom-in fixed inset-0 z-[100] flex items-center justify-center p-8 backdrop-blur-xl duration-300">
+          <div className="bg-card relative h-full w-full overflow-hidden rounded-3xl border shadow-2xl">
+            <GraphView
+              selectedId={currentId || null}
+              onClose={() => setIsGraphOpen(false)}
             />
           </div>
         </div>
