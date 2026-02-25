@@ -5,10 +5,11 @@ export async function POST(req: NextRequest) {
   try {
     const supabase = await createSupabaseServerClient();
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
 
     const fileExt = file.name.split(".").pop();
     const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
-    const filePath = `${session.user.id}/${fileName}`;
+    const filePath = `${user.id}/${fileName}`;
 
     const { data, error } = await supabase.storage
       .from("knowledge-base-media")

@@ -1,3 +1,4 @@
+import { searchKB } from "@/lib/actions/knowledge-base";
 import { ReactRenderer } from "@tiptap/react";
 import tippy from "tippy.js";
 import MentionList from "./mention-list";
@@ -7,10 +8,7 @@ export default {
   items: async ({ query }: { query: string }) => {
     if (query.length < 1) return [];
     try {
-      const res = await fetch(`/api/kb/search?q=\${encodeURIComponent(query)}`);
-      if (!res.ok) return [];
-      const data = await res.json();
-      return data;
+      return await searchKB(query);
     } catch (e) {
       return [];
     }
