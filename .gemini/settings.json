@@ -16,5 +16,11 @@
   "experimental": {
     "enableAgents": true,
     "plan": true
+  },
+  "mcpServers": {
+    "knowns": {
+      "command": "npx",
+      "args": ["-y", "knowns", "mcp"]
+    }
   }
 }

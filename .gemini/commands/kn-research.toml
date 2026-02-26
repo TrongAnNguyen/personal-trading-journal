@@ -1,0 +1,2 @@
+description="Use when you need to understand existing code, find patterns, or explore the codebase before implementation"
+prompt = "Use skill kn-research"

@@ -1,0 +1,2 @@
+description="Use when creating an implementation plan for a task"
+prompt = "Use skill kn-plan to {{args}}"

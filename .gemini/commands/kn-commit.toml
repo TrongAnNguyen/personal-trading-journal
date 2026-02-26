@@ -1,0 +1,2 @@
+description="Use when committing code changes with proper conventional commit format and verification"
+prompt = "Use skill kn-commit"

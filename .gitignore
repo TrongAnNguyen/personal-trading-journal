@@ -43,4 +43,5 @@ next-env.d.ts
 /src/generated/prisma
 
 # knowns search index (rebuilt on demand)
-.knowns/search-index/
+.knowns/search-index
+.knowns/.search

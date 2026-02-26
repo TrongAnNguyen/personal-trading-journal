@@ -1,0 +1,2 @@
+description="Use at the start of a new session to read project docs, understand context, and see current state"
+prompt = "Use skill kn-init"
