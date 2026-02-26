@@ -3,20 +3,15 @@
 import { CacheTTL } from "@/constants";
 import { prisma } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { serialize } from "@/lib/utils";
 import type { ChecklistTemplate } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { getAuthenticatedUserId } from "./utils";
 
 export async function getDisciplineChecklist(): Promise<ChecklistTemplate | null> {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const userId = await getAuthenticatedUserId();
 
-  if (!user) return null;
-
-  const cacheKey = `user:${user.id}:checklist-template`;
+  const cacheKey = `user:${userId}:checklist-template`;
 
   try {
     const cached = await redis.get<ChecklistTemplate>(cacheKey);
@@ -26,7 +21,7 @@ export async function getDisciplineChecklist(): Promise<ChecklistTemplate | null
   }
 
   const template = await prisma.checklistTemplate.findFirst({
-    where: { userId: user.id },
+    where: { userId },
   });
 
   const serialized = serialize(template) as ChecklistTemplate | null;
@@ -43,19 +38,12 @@ export async function getDisciplineChecklist(): Promise<ChecklistTemplate | null
 }
 
 export async function updateDisciplineChecklist(items: string[]) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const userId = await getAuthenticatedUserId();
 
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
-
-  const cacheKey = `user:${user.id}:checklist-template`;
+  const cacheKey = `user:${userId}:checklist-template`;
 
   const template = await prisma.checklistTemplate.findFirst({
-    where: { userId: user.id },
+    where: { userId },
   });
 
   let updatedTemplate;
@@ -67,7 +55,7 @@ export async function updateDisciplineChecklist(items: string[]) {
   } else {
     updatedTemplate = await prisma.checklistTemplate.create({
       data: {
-        userId: user.id,
+        userId,
         items,
       },
     });

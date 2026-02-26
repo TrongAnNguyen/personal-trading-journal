@@ -3,22 +3,15 @@
 import { CacheTTL } from "@/constants";
 import { prisma } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { serialize } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
+import { getAuthenticatedUserId } from "./utils";
 
 export const getAccounts = cache(async function () {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const userId = await getAuthenticatedUserId();
 
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
-
-  const cacheKey = `user:${user.id}:accounts`;
+  const cacheKey = `user:${userId}:accounts`;
 
   try {
     const cached = await redis.get<any[]>(cacheKey);
@@ -28,7 +21,7 @@ export const getAccounts = cache(async function () {
   }
 
   const accounts = await prisma.account.findMany({
-    where: { userId: user.id },
+    where: { userId },
     orderBy: { createdAt: "desc" },
   });
 
@@ -48,25 +41,18 @@ export async function createAccount(input: {
   initialBalance: number;
   currency: string;
 }) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
+  const userId = await getAuthenticatedUserId();
 
   const account = await prisma.account.create({
     data: {
-      userId: user.id,
+      userId,
       name: input.name,
       initialBalance: input.initialBalance,
       currency: input.currency,
     },
   });
 
-  await redis.del(`user:${user.id}:accounts`);
+  await redis.del(`user:${userId}:accounts`);
   revalidatePath("/dashboard/accounts");
   return serialize(account);
 }

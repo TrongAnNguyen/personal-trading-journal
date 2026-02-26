@@ -3,20 +3,13 @@
 import { CacheTTL } from "@/constants";
 import { prisma } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { serialize } from "@/lib/utils";
+import { getAuthenticatedUserId } from "./utils";
 
 export async function getTags() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const userId = await getAuthenticatedUserId();
 
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
-
-  const cacheKey = `user:${user.id}:tags`;
+  const cacheKey = `user:${userId}:tags`;
 
   try {
     const cached = await redis.get<any[]>(cacheKey);
@@ -45,14 +38,7 @@ export async function createTag(input: {
   type: string;
   color?: string;
 }) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
+  const userId = await getAuthenticatedUserId();
 
   const tag = await prisma.tag.create({
     data: {
@@ -62,6 +48,6 @@ export async function createTag(input: {
     },
   });
 
-  await redis.del(`user:${user.id}:tags`);
+  await redis.del(`user:${userId}:tags`);
   return serialize(tag);
 }

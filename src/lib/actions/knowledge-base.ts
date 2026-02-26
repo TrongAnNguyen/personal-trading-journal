@@ -1,8 +1,11 @@
 "use server";
 
+import { CacheTTL } from "@/constants";
 import { prisma } from "@/lib/db";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { redis } from "@/lib/redis";
 import { revalidatePath } from "next/cache";
+import { cache } from "react";
+import { getAuthenticatedUserId } from "./utils";
 
 export type NoteWithMeta = {
   id: string;
@@ -11,56 +14,61 @@ export type NoteWithMeta = {
   createdAt: Date;
 };
 
-async function getAuthenticatedUserId(): Promise<string> {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    throw new Error("Unauthorized");
-  }
-
-  return user.id;
-}
-
 // ── Reads ──────────────────────────────────────────────────────────────────
 
-export async function getNotes(sort: "asc" | "desc" = "desc"): Promise<NoteWithMeta[]> {
+export const getNotes = cache(
+  async (sort: "asc" | "desc" = "desc"): Promise<NoteWithMeta[]> => {
+    try {
+      const userId = await getAuthenticatedUserId();
+      const cacheKey = `user:${userId}:notes:list:${sort}`;
+
+      const cached = await redis.get<NoteWithMeta[]>(cacheKey);
+      if (cached) return cached;
+
+      const notes = await prisma.note.findMany({
+        where: { userId },
+        orderBy: { updatedAt: sort },
+        select: { id: true, title: true, updatedAt: true, createdAt: true },
+      });
+
+      await redis.set(cacheKey, notes, CacheTTL.OneWeek);
+      return notes;
+    } catch (error) {
+      console.error("[GET_NOTES_ERROR]", error);
+      return [];
+    }
+  },
+);
+
+export const getNote = cache(async (id: string) => {
   try {
     const userId = await getAuthenticatedUserId();
+    const cacheKey = `user:${userId}:notes:detail:${id}`;
 
-    return prisma.note.findMany({
-      where: { userId },
-      orderBy: { updatedAt: sort },
-      select: { id: true, title: true, updatedAt: true, createdAt: true },
-    });
-  } catch (error) {
-    console.error("[GET_NOTES_ERROR]", error);
-    return [];
-  }
-}
-
-export async function getNote(id: string) {
-  try {
-    const userId = await getAuthenticatedUserId();
+    const cached = await redis.get<any>(cacheKey);
+    if (cached) return cached;
 
     const note = await prisma.note.findFirst({
       where: { id, userId },
     });
 
     if (!note) throw new Error("Not Found");
+
+    await redis.set(cacheKey, note, CacheTTL.OneWeek);
     return note;
   } catch (error) {
     console.error("[GET_NOTE_ERROR]", error);
     throw error;
   }
-}
+});
 
-export async function searchKB(query: string) {
+export const searchKB = cache(async (query: string) => {
   try {
     const userId = await getAuthenticatedUserId();
+    const cacheKey = `user:${userId}:notes:search:${query}`;
+
+    const cached = await redis.get<any[]>(cacheKey);
+    if (cached) return cached;
 
     const [notes, trades] = await Promise.all([
       prisma.note.findMany({
@@ -81,23 +89,34 @@ export async function searchKB(query: string) {
       }),
     ]);
 
-    return [
-      ...notes.map((n) => ({ id: n.id, label: n.title, type: "note" as const })),
+    const results = [
+      ...notes.map((n) => ({
+        id: n.id,
+        label: n.title,
+        type: "note" as const,
+      })),
       ...trades.map((t) => ({
         id: t.id,
         label: `${t.symbol} (${t.side}) - ${new Date(t.entryTime).toLocaleDateString()}`,
         type: "trade" as const,
       })),
     ];
+
+    await redis.set(cacheKey, results, CacheTTL.OneWeek);
+    return results;
   } catch (error) {
     console.error("[SEARCH_KB_ERROR]", error);
     return [];
   }
-}
+});
 
-export async function getGraph() {
+export const getGraph = cache(async () => {
   try {
     const userId = await getAuthenticatedUserId();
+    const cacheKey = `user:${userId}:notes:graph`;
+
+    const cached = await redis.get<any>(cacheKey);
+    if (cached) return cached;
 
     const [notes, noteLinks, tradeLinks] = await Promise.all([
       prisma.note.findMany({
@@ -151,12 +170,15 @@ export async function getGraph() {
       }
     });
 
-    return { nodes: Array.from(nodesMap.values()), links };
+    const graph = { nodes: Array.from(nodesMap.values()), links };
+
+    await redis.set(cacheKey, graph, CacheTTL.OneWeek);
+    return graph;
   } catch (error) {
     console.error("[GET_GRAPH_ERROR]", error);
     return { nodes: [], links: [] };
   }
-}
+});
 
 // ── Mutations ──────────────────────────────────────────────────────────────
 
@@ -200,6 +222,7 @@ Explain the core logic behind this strategy...
       },
     });
 
+    await redis.delPrefix(`user:${userId}:notes`);
     revalidatePath("/dashboard/knowledge-base");
     return { data: note };
   } catch (error) {
@@ -258,7 +281,8 @@ export async function updateNote(
       }
     }
 
-    revalidatePath(`/dashboard/knowledge-base/\${id}`);
+    await redis.delPrefix(`user:${userId}:notes`);
+    revalidatePath(`/dashboard/knowledge-base/${id}`);
     revalidatePath("/dashboard/knowledge-base");
     return { data: updated };
   } catch (error) {
@@ -273,6 +297,7 @@ export async function deleteNote(id: string) {
 
     await prisma.note.delete({ where: { id, userId } });
 
+    await redis.delPrefix(`user:${userId}:notes`);
     revalidatePath("/dashboard/knowledge-base");
     return { data: { success: true } };
   } catch (error) {

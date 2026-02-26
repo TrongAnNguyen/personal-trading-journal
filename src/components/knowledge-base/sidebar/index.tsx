@@ -105,7 +105,7 @@ export default function KnowledgeBaseSidebar({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 font-semibold">
               <BrainCircuit className="text-primary h-5 w-5" />
-              <span className="from-foreground to-foreground/70 bg-gradient-to-r bg-clip-text text-transparent">
+              <span className="from-foreground to-foreground/70 bg-linear-to-r bg-clip-text text-transparent">
                 Second Brain
               </span>
             </div>
@@ -212,7 +212,7 @@ export default function KnowledgeBaseSidebar({
       </aside>
 
       {isGraphOpen && (
-        <div className="bg-background/95 animate-in fade-in zoom-in fixed inset-0 z-[100] flex items-center justify-center p-8 backdrop-blur-xl duration-300">
+        <div className="bg-background/95 animate-in fade-in zoom-in fixed inset-0 z-100 flex items-center justify-center p-8 backdrop-blur-xl duration-300">
           <div className="bg-card relative h-full w-full overflow-hidden rounded-3xl border shadow-2xl">
             <GraphView
               selectedId={currentId || null}

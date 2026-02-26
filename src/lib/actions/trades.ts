@@ -4,7 +4,6 @@ import { CacheTTL } from "@/constants";
 import { calculatePnL, calculateRiskReward } from "@/lib/calculations";
 import { prisma } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { serialize } from "@/lib/utils";
 import {
   closeTradeSchema,
@@ -17,16 +16,10 @@ import {
 } from "@/types/trade";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
+import { getAuthenticatedUserId } from "./utils";
 
 export async function createTrade(input: CreateTradeInput) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
+  const userId = await getAuthenticatedUserId();
 
   const validated = createTradeSchema.parse(input);
 
@@ -63,7 +56,7 @@ export async function createTrade(input: CreateTradeInput) {
     },
   });
 
-  await redis.delPrefix(`user:${user.id}:trades:`);
+  await redis.delPrefix(`user:${userId}:trades:`);
   revalidatePath("/dashboard/trades");
   revalidatePath("/dashboard");
 
@@ -71,14 +64,7 @@ export async function createTrade(input: CreateTradeInput) {
 }
 
 export async function closeTrade(tradeId: string, input: CloseTradeInput) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
+  const userId = await getAuthenticatedUserId();
 
   const validated = closeTradeSchema.parse(input);
 
@@ -123,7 +109,7 @@ export async function closeTrade(tradeId: string, input: CloseTradeInput) {
     },
   });
 
-  await redis.delPrefix(`user:${user.id}:trades:`);
+  await redis.delPrefix(`user:${userId}:trades:`);
   revalidatePath("/dashboard/trades");
   revalidatePath("/dashboard");
 
@@ -131,14 +117,7 @@ export async function closeTrade(tradeId: string, input: CloseTradeInput) {
 }
 
 export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
+  const userId = await getAuthenticatedUserId();
 
   const validated = updateTradeSchema.parse(input);
 
@@ -208,7 +187,7 @@ export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
     },
   });
 
-  await redis.delPrefix(`user:${user.id}:trades:`);
+  await redis.delPrefix(`user:${userId}:trades:`);
   revalidatePath("/dashboard/trades");
   revalidatePath(`/dashboard/trades/${tradeId}`);
   revalidatePath("/dashboard");
@@ -217,20 +196,13 @@ export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
 }
 
 export async function deleteTrade(tradeId: string) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
+  const userId = await getAuthenticatedUserId();
 
   await prisma.trade.delete({
     where: { id: tradeId },
   });
 
-  await redis.delPrefix(`user:${user.id}:trades:`);
+  await redis.delPrefix(`user:${userId}:trades:`);
   revalidatePath("/dashboard/trades");
   revalidatePath("/dashboard");
 
@@ -241,14 +213,9 @@ export const getTrades = cache(async function (
   accountId?: string,
   status?: "OPEN" | "CLOSED",
 ) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const userId = await getAuthenticatedUserId();
 
-  if (!user) return serialize([]);
-
-  const cacheKey = `user:${user.id}:trades:acc:${accountId || "all"}:stat:${status || "all"}`;
+  const cacheKey = `user:${userId}:trades:acc:${accountId || "all"}:stat:${status || "all"}`;
 
   try {
     const cached = await redis.get<Trade[]>(cacheKey);
@@ -287,14 +254,9 @@ export const getTrades = cache(async function (
 });
 
 export async function getTrade(tradeId: string) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const userId = await getAuthenticatedUserId();
 
-  if (!user) return null;
-
-  const cacheKey = `user:${user.id}:trades:id:${tradeId}`;
+  const cacheKey = `user:${userId}:trades:id:${tradeId}`;
 
   try {
     const cached = await redis.get<Trade>(cacheKey);
