@@ -1,0 +1,7 @@
+import { get{{name}}Data } from "@/lib/actions/{{kebabCase name}}";
+import {{name}} from "./index";
+
+export default async function {{name}}Container() {
+  const data = await get{{name}}Data();
+  return <{{name}} initialData={data} />;
+}

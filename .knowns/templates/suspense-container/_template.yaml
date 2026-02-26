@@ -1,0 +1,38 @@
+# Template: suspense-container
+name: suspense-container
+description: Generate a Server Component container with a matching Skeleton for Suspense boundaries.
+version: 1.0.0
+doc: patterns/performance/breaking-data-fetching-waterfalls
+
+# Interactive prompts
+prompts:
+  - name: name
+    type: text
+    message: "Component Name (PascalCase, e.g. ProductSidebar)?"
+    validate: required
+  - name: path
+    type: text
+    message: "Output directory (relative to src/components/)?"
+    default: "ui"
+
+# File generation actions
+actions:
+  - type: add
+    template: "container.tsx.hbs"
+    path: "src/components/{{path}}/{{kebabCase name}}/container.tsx"
+  - type: add
+    template: "index.tsx.hbs"
+    path: "src/components/{{path}}/{{kebabCase name}}/index.tsx"
+  - type: add
+    template: "skeleton.tsx.hbs"
+    path: "src/components/{{path}}/{{kebabCase name}}/skeleton.tsx"
+
+# Success message
+messages:
+  success: |
+    ✓ Created {{name}} components in src/components/{{path}}/{{kebabCase name}}!
+    
+    Usage:
+    <Suspense fallback={<{{name}}Skeleton />}>
+      <{{name}}Container />
+    </Suspense>

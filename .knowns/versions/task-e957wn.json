@@ -1,0 +1,334 @@
+{
+  "taskId": "e957wn",
+  "currentVersion": 6,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "e957wn",
+      "version": 1,
+      "timestamp": "2026-02-26T01:54:13.394Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "in-progress"
+        },
+        {
+          "field": "assignee",
+          "newValue": "@me"
+        }
+      ],
+      "snapshot": {
+        "title": "Refactor Knowledge Base Layout Performance",
+        "description": "Refactor knowledge-base layout for performance using Vercel best practices and React composition patterns.",
+        "status": "in-progress",
+        "priority": "medium",
+        "assignee": "@me",
+        "labels": [],
+        "acceptanceCriteria": []
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "e957wn",
+      "version": 2,
+      "timestamp": "2026-02-26T01:54:31.653Z",
+      "changes": [
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [],
+          "newValue": [
+            {
+              "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx",
+              "completed": false
+            },
+            {
+              "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx",
+              "completed": false
+            },
+            {
+              "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries",
+              "completed": false
+            },
+            {
+              "text": "Verify that layout renders immediately with skeleton loading state",
+              "completed": false
+            }
+          ]
+        },
+        {
+          "field": "implementationPlan",
+          "newValue": "## Implementation Plan\nRefactor Knowledge Base layout to eliminate data-fetching waterfalls and improve perceived performance using React Suspense and Server Components.\n\n### 1. Create Sidebar Skeleton\nCreate a `SidebarSkeleton` component in `src/components/knowledge-base/sidebar/skeleton.tsx` using `src/components/ui/skeleton.tsx`. It should mimic the layout of the sidebar (header, buttons, search, and a list of notes).\n\n### 2. Create Sidebar Container\nCreate `src/components/knowledge-base/sidebar/container.tsx` as a Server Component.\n- Fetch `getNotes()` from `@/lib/actions/knowledge-base`.\n- Pass the notes to the existing `KnowledgeBaseSidebar` client component.\n\n### 3. Refactor Layout\nModify `src/app/(dashboard)/dashboard/knowledge-base/layout.tsx`:\n- Remove `async` from the layout function.\n- Remove `await getNotes()`.\n- Wrap `SidebarContainer` in `<Suspense fallback={<SidebarSkeleton />}>`.\n- Keep the `Suspense` boundary for `children`.\n\n### 4. Verification\n- Use React DevTools or slow network throttling to verify the skeleton loading states.\n- Ensure that creating/deleting notes still works with optimistic updates.\n"
+        }
+      ],
+      "snapshot": {
+        "title": "Refactor Knowledge Base Layout Performance",
+        "description": "Refactor knowledge-base layout for performance using Vercel best practices and React composition patterns.",
+        "status": "in-progress",
+        "priority": "medium",
+        "assignee": "@me",
+        "labels": [],
+        "acceptanceCriteria": [
+          {
+            "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx",
+            "completed": false
+          },
+          {
+            "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx",
+            "completed": false
+          },
+          {
+            "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries",
+            "completed": false
+          },
+          {
+            "text": "Verify that layout renders immediately with skeleton loading state",
+            "completed": false
+          }
+        ],
+        "implementationPlan": "## Implementation Plan\nRefactor Knowledge Base layout to eliminate data-fetching waterfalls and improve perceived performance using React Suspense and Server Components.\n\n### 1. Create Sidebar Skeleton\nCreate a `SidebarSkeleton` component in `src/components/knowledge-base/sidebar/skeleton.tsx` using `src/components/ui/skeleton.tsx`. It should mimic the layout of the sidebar (header, buttons, search, and a list of notes).\n\n### 2. Create Sidebar Container\nCreate `src/components/knowledge-base/sidebar/container.tsx` as a Server Component.\n- Fetch `getNotes()` from `@/lib/actions/knowledge-base`.\n- Pass the notes to the existing `KnowledgeBaseSidebar` client component.\n\n### 3. Refactor Layout\nModify `src/app/(dashboard)/dashboard/knowledge-base/layout.tsx`:\n- Remove `async` from the layout function.\n- Remove `await getNotes()`.\n- Wrap `SidebarContainer` in `<Suspense fallback={<SidebarSkeleton />}>`.\n- Keep the `Suspense` boundary for `children`.\n\n### 4. Verification\n- Use React DevTools or slow network throttling to verify the skeleton loading states.\n- Ensure that creating/deleting notes still works with optimistic updates.\n"
+      }
+    },
+    {
+      "id": "v3",
+      "taskId": "e957wn",
+      "version": 3,
+      "timestamp": "2026-02-26T01:57:16.209Z",
+      "changes": [
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [
+            {
+              "completed": false,
+              "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx"
+            },
+            {
+              "completed": false,
+              "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx"
+            },
+            {
+              "completed": false,
+              "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries"
+            },
+            {
+              "completed": false,
+              "text": "Verify that layout renders immediately with skeleton loading state"
+            }
+          ],
+          "newValue": [
+            {
+              "completed": true,
+              "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx"
+            },
+            {
+              "completed": true,
+              "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx"
+            },
+            {
+              "completed": true,
+              "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries"
+            },
+            {
+              "completed": false,
+              "text": "Verify that layout renders immediately with skeleton loading state"
+            }
+          ]
+        },
+        {
+          "field": "implementationNotes",
+          "newValue": "Created SidebarSkeleton and SidebarContainer. Refactored layout to use Suspense and break the waterfall."
+        }
+      ],
+      "snapshot": {
+        "title": "Refactor Knowledge Base Layout Performance",
+        "description": "Refactor knowledge-base layout for performance using Vercel best practices and React composition patterns.",
+        "status": "in-progress",
+        "priority": "medium",
+        "assignee": "@me",
+        "labels": [],
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx"
+          },
+          {
+            "completed": true,
+            "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx"
+          },
+          {
+            "completed": true,
+            "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries"
+          },
+          {
+            "completed": false,
+            "text": "Verify that layout renders immediately with skeleton loading state"
+          }
+        ],
+        "implementationPlan": "## Implementation Plan\nRefactor Knowledge Base layout to eliminate data-fetching waterfalls and improve perceived performance using React Suspense and Server Components.\n\n### 1. Create Sidebar Skeleton\nCreate a `SidebarSkeleton` component in `src/components/knowledge-base/sidebar/skeleton.tsx` using `src/components/ui/skeleton.tsx`. It should mimic the layout of the sidebar (header, buttons, search, and a list of notes).\n\n### 2. Create Sidebar Container\nCreate `src/components/knowledge-base/sidebar/container.tsx` as a Server Component.\n- Fetch `getNotes()` from `@/lib/actions/knowledge-base`.\n- Pass the notes to the existing `KnowledgeBaseSidebar` client component.\n\n### 3. Refactor Layout\nModify `src/app/(dashboard)/dashboard/knowledge-base/layout.tsx`:\n- Remove `async` from the layout function.\n- Remove `await getNotes()`.\n- Wrap `SidebarContainer` in `<Suspense fallback={<SidebarSkeleton />}>`.\n- Keep the `Suspense` boundary for `children`.\n\n### 4. Verification\n- Use React DevTools or slow network throttling to verify the skeleton loading states.\n- Ensure that creating/deleting notes still works with optimistic updates.",
+        "implementationNotes": "Created SidebarSkeleton and SidebarContainer. Refactored layout to use Suspense and break the waterfall."
+      }
+    },
+    {
+      "id": "v4",
+      "taskId": "e957wn",
+      "version": 4,
+      "timestamp": "2026-02-26T01:58:29.024Z",
+      "changes": [
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [
+            {
+              "completed": true,
+              "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx"
+            },
+            {
+              "completed": true,
+              "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx"
+            },
+            {
+              "completed": true,
+              "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries"
+            },
+            {
+              "completed": false,
+              "text": "Verify that layout renders immediately with skeleton loading state"
+            }
+          ],
+          "newValue": [
+            {
+              "completed": true,
+              "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx"
+            },
+            {
+              "completed": true,
+              "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx"
+            },
+            {
+              "completed": true,
+              "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries"
+            },
+            {
+              "completed": true,
+              "text": "Verify that layout renders immediately with skeleton loading state"
+            }
+          ]
+        },
+        {
+          "field": "implementationNotes",
+          "oldValue": "Created SidebarSkeleton and SidebarContainer. Refactored layout to use Suspense and break the waterfall.",
+          "newValue": "Created SidebarSkeleton and SidebarContainer. Refactored layout to use Suspense and break the waterfall.\n\nVerified changes with npx tsc --noEmit. Also fixed a missing Loader2 import in editor.tsx."
+        }
+      ],
+      "snapshot": {
+        "title": "Refactor Knowledge Base Layout Performance",
+        "description": "Refactor knowledge-base layout for performance using Vercel best practices and React composition patterns.",
+        "status": "in-progress",
+        "priority": "medium",
+        "assignee": "@me",
+        "labels": [],
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx"
+          },
+          {
+            "completed": true,
+            "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx"
+          },
+          {
+            "completed": true,
+            "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries"
+          },
+          {
+            "completed": true,
+            "text": "Verify that layout renders immediately with skeleton loading state"
+          }
+        ],
+        "implementationPlan": "## Implementation Plan\nRefactor Knowledge Base layout to eliminate data-fetching waterfalls and improve perceived performance using React Suspense and Server Components.\n\n### 1. Create Sidebar Skeleton\nCreate a `SidebarSkeleton` component in `src/components/knowledge-base/sidebar/skeleton.tsx` using `src/components/ui/skeleton.tsx`. It should mimic the layout of the sidebar (header, buttons, search, and a list of notes).\n\n### 2. Create Sidebar Container\nCreate `src/components/knowledge-base/sidebar/container.tsx` as a Server Component.\n- Fetch `getNotes()` from `@/lib/actions/knowledge-base`.\n- Pass the notes to the existing `KnowledgeBaseSidebar` client component.\n\n### 3. Refactor Layout\nModify `src/app/(dashboard)/dashboard/knowledge-base/layout.tsx`:\n- Remove `async` from the layout function.\n- Remove `await getNotes()`.\n- Wrap `SidebarContainer` in `<Suspense fallback={<SidebarSkeleton />}>`.\n- Keep the `Suspense` boundary for `children`.\n\n### 4. Verification\n- Use React DevTools or slow network throttling to verify the skeleton loading states.\n- Ensure that creating/deleting notes still works with optimistic updates.",
+        "implementationNotes": "Created SidebarSkeleton and SidebarContainer. Refactored layout to use Suspense and break the waterfall.\n\nVerified changes with npx tsc --noEmit. Also fixed a missing Loader2 import in editor.tsx."
+      }
+    },
+    {
+      "id": "v5",
+      "taskId": "e957wn",
+      "version": 5,
+      "timestamp": "2026-02-26T01:58:36.552Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "in-progress",
+          "newValue": "done"
+        }
+      ],
+      "snapshot": {
+        "title": "Refactor Knowledge Base Layout Performance",
+        "description": "Refactor knowledge-base layout for performance using Vercel best practices and React composition patterns.",
+        "status": "done",
+        "priority": "medium",
+        "assignee": "@me",
+        "labels": [],
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx"
+          },
+          {
+            "completed": true,
+            "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx"
+          },
+          {
+            "completed": true,
+            "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries"
+          },
+          {
+            "completed": true,
+            "text": "Verify that layout renders immediately with skeleton loading state"
+          }
+        ],
+        "implementationPlan": "## Implementation Plan\nRefactor Knowledge Base layout to eliminate data-fetching waterfalls and improve perceived performance using React Suspense and Server Components.\n\n### 1. Create Sidebar Skeleton\nCreate a `SidebarSkeleton` component in `src/components/knowledge-base/sidebar/skeleton.tsx` using `src/components/ui/skeleton.tsx`. It should mimic the layout of the sidebar (header, buttons, search, and a list of notes).\n\n### 2. Create Sidebar Container\nCreate `src/components/knowledge-base/sidebar/container.tsx` as a Server Component.\n- Fetch `getNotes()` from `@/lib/actions/knowledge-base`.\n- Pass the notes to the existing `KnowledgeBaseSidebar` client component.\n\n### 3. Refactor Layout\nModify `src/app/(dashboard)/dashboard/knowledge-base/layout.tsx`:\n- Remove `async` from the layout function.\n- Remove `await getNotes()`.\n- Wrap `SidebarContainer` in `<Suspense fallback={<SidebarSkeleton />}>`.\n- Keep the `Suspense` boundary for `children`.\n\n### 4. Verification\n- Use React DevTools or slow network throttling to verify the skeleton loading states.\n- Ensure that creating/deleting notes still works with optimistic updates.",
+        "implementationNotes": "Created SidebarSkeleton and SidebarContainer. Refactored layout to use Suspense and break the waterfall.\n\nVerified changes with npx tsc --noEmit. Also fixed a missing Loader2 import in editor.tsx."
+      }
+    },
+    {
+      "id": "v6",
+      "taskId": "e957wn",
+      "version": 6,
+      "timestamp": "2026-02-26T02:01:12.058Z",
+      "changes": [
+        {
+          "field": "implementationNotes",
+          "oldValue": "Created SidebarSkeleton and SidebarContainer. Refactored layout to use Suspense and break the waterfall.\n\nVerified changes with npx tsc --noEmit. Also fixed a missing Loader2 import in editor.tsx.",
+          "newValue": "Created SidebarSkeleton and SidebarContainer. Refactored layout to use Suspense and break the waterfall.\n\nVerified changes with npx tsc --noEmit. Also fixed a missing Loader2 import in editor.tsx.\n\n📚 Extracted to @doc/patterns/performance/breaking-data-fetching-waterfalls and created @template/suspense-container"
+        }
+      ],
+      "snapshot": {
+        "title": "Refactor Knowledge Base Layout Performance",
+        "description": "Refactor knowledge-base layout for performance using Vercel best practices and React composition patterns.",
+        "status": "done",
+        "priority": "medium",
+        "assignee": "@me",
+        "labels": [],
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "Create SidebarSkeleton component in src/components/knowledge-base/sidebar/skeleton.tsx"
+          },
+          {
+            "completed": true,
+            "text": "Create SidebarContainer server component in src/components/knowledge-base/sidebar/container.tsx"
+          },
+          {
+            "completed": true,
+            "text": "Refactor KnowledgeBaseLayout in src/app/(dashboard)/dashboard/knowledge-base/layout.tsx to remove waterfall and add Suspense boundaries"
+          },
+          {
+            "completed": true,
+            "text": "Verify that layout renders immediately with skeleton loading state"
+          }
+        ],
+        "implementationPlan": "## Implementation Plan\nRefactor Knowledge Base layout to eliminate data-fetching waterfalls and improve perceived performance using React Suspense and Server Components.\n\n### 1. Create Sidebar Skeleton\nCreate a `SidebarSkeleton` component in `src/components/knowledge-base/sidebar/skeleton.tsx` using `src/components/ui/skeleton.tsx`. It should mimic the layout of the sidebar (header, buttons, search, and a list of notes).\n\n### 2. Create Sidebar Container\nCreate `src/components/knowledge-base/sidebar/container.tsx` as a Server Component.\n- Fetch `getNotes()` from `@/lib/actions/knowledge-base`.\n- Pass the notes to the existing `KnowledgeBaseSidebar` client component.\n\n### 3. Refactor Layout\nModify `src/app/(dashboard)/dashboard/knowledge-base/layout.tsx`:\n- Remove `async` from the layout function.\n- Remove `await getNotes()`.\n- Wrap `SidebarContainer` in `<Suspense fallback={<SidebarSkeleton />}>`.\n- Keep the `Suspense` boundary for `children`.\n\n### 4. Verification\n- Use React DevTools or slow network throttling to verify the skeleton loading states.\n- Ensure that creating/deleting notes still works with optimistic updates.",
+        "implementationNotes": "Created SidebarSkeleton and SidebarContainer. Refactored layout to use Suspense and break the waterfall.\n\nVerified changes with npx tsc --noEmit. Also fixed a missing Loader2 import in editor.tsx.\n\n📚 Extracted to @doc/patterns/performance/breaking-data-fetching-waterfalls and created @template/suspense-container"
+      }
+    }
+  ]
+}
