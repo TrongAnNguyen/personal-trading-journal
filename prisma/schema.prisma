@@ -33,6 +33,7 @@ model Account {
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   trades         Trade[]
 
+  @@index([userId])
   @@map("accounts")
 }
 
@@ -100,6 +101,7 @@ model Attachment {
   caption  String?
   trade    Trade             @relation(fields: [tradeId], references: [id], onDelete: Cascade)
 
+  @@index([tradeId])
   @@map("attachments")
 }
 
@@ -110,6 +112,7 @@ model ChecklistItem {
   checked Boolean @default(false)
   trade   Trade   @relation(fields: [tradeId], references: [id], onDelete: Cascade)
 
+  @@index([tradeId])
   @@map("checklist_items")
 }
 
