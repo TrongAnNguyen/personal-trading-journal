@@ -3,6 +3,8 @@ import { AccountListSkeleton } from "@/components/accounts/account-list-skeleton
 import { CreateAccountDialog } from "@/components/accounts/create-account-dialog";
 import { Suspense } from "react";
 
+export const dynamic = "force-dynamic";
+
 export default async function AccountsPage() {
   return (
     <div className="space-y-6">

@@ -1,6 +1,8 @@
-import { Suspense } from "react";
 import KnowledgeBaseSidebarContainer from "@/components/knowledge-base/sidebar/container";
 import { SidebarSkeleton } from "@/components/knowledge-base/sidebar/skeleton";
+import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 
 export default function KnowledgeBaseLayout({
   children,

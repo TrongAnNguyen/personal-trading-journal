@@ -10,9 +10,6 @@ import {
   Trade,
   tradeSchema,
   updateTradeSchema,
-  type CloseTradeInput,
-  type CreateTradeInput,
-  type UpdateTradeInput,
 } from "@/types/trade";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
@@ -177,7 +174,9 @@ export const updateTrade = createAction(
         }),
         ...(validated.volume !== undefined && { volume: validated.volume }),
         ...(validated.fees !== undefined && { fees: validated.fees }),
-        ...(validated.stopLoss !== undefined && { stopLoss: validated.stopLoss }),
+        ...(validated.stopLoss !== undefined && {
+          stopLoss: validated.stopLoss,
+        }),
         ...(validated.takeProfit !== undefined && {
           takeProfit: validated.takeProfit,
         }),
@@ -265,7 +264,7 @@ export const getTrades = cache(async function (
     tags: t.tags?.map((tt: any) => tt.tag) ?? [],
   }));
 
-  const serialized = z.array(tradeSchema).parse(trades) as Trade[];
+  const serialized = z.array(tradeSchema).parse(trades);
 
   try {
     await redis.set(cacheKey, serialized, CacheTTL.OneWeek);
@@ -305,7 +304,7 @@ export async function getTrade(tradeId: string): Promise<Trade | null> {
     tags: trade.tags.map((t) => t.tag),
   };
 
-  const serialized = tradeSchema.parse(flattenedTrade) as Trade;
+  const serialized = tradeSchema.parse(flattenedTrade);
 
   try {
     if (serialized) {

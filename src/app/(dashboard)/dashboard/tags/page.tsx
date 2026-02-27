@@ -3,6 +3,8 @@ import { CreateTagDialog } from "@/components/tags/create-tag-dialog";
 import { TagList } from "@/components/tags/tag-list";
 import { TagListSkeleton } from "@/components/tags/tag-list-skeleton";
 
+export const dynamic = "force-dynamic";
+
 export default function TagsPage() {
   return (
     <div className="space-y-6">

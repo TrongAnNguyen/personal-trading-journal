@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { CloseTradeForm } from "@/components/trades/close-trade-form";
 import { ArrowLeft } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 interface CloseTradePageProps {
   params: Promise<{ id: string }>;
 }

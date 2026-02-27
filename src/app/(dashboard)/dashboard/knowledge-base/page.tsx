@@ -1,5 +1,7 @@
 import { BrainCircuit } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default function KnowledgeBasePage() {
   return (
     <div className="bg-background/50 flex h-full flex-1 flex-col items-center justify-center p-8 text-center">

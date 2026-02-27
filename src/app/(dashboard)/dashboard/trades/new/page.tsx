@@ -5,6 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { getAccounts } from "@/lib/actions/accounts";
 import { getDisciplineChecklist } from "@/lib/actions/checklist";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewTradePage() {
   const [accounts, checklistTemplate] = await Promise.all([
     getAccounts(),

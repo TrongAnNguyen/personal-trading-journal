@@ -3,11 +3,7 @@
 import { CacheTTL } from "@/constants";
 import { prisma } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import {
-  Account,
-  accountSchema,
-  createAccountSchema,
-} from "@/types/trade";
+import { Account, accountSchema, createAccountSchema } from "@/types/trade";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
 import { z } from "zod";
@@ -30,7 +26,7 @@ export const getAccounts = cache(async function (): Promise<Account[]> {
     orderBy: { createdAt: "desc" },
   });
 
-  const serialized = z.array(accountSchema).parse(accounts) as Account[];
+  const serialized = z.array(accountSchema).parse(accounts);
 
   try {
     await redis.set(cacheKey, serialized, CacheTTL.OneWeek);

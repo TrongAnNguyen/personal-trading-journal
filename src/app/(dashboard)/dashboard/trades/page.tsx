@@ -5,6 +5,8 @@ import { TradeList } from "@/components/trades/trade-list";
 import { TradeListSkeleton } from "@/components/trades/trade-list-skeleton";
 import { Plus, Filter } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default function TradesPage() {
   return (
     <div className="space-y-6">

@@ -1,7 +1,5 @@
-"use client";
-
-import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function SidebarSkeleton() {
   return (
@@ -30,7 +28,10 @@ export function SidebarSkeleton() {
       <ScrollArea className="flex-1 p-2">
         <div className="flex flex-col gap-1 px-1">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="flex flex-col gap-2 rounded-2xl p-3 border border-transparent">
+            <div
+              key={i}
+              className="flex flex-col gap-2 rounded-2xl border border-transparent p-3"
+            >
               <div className="flex items-center justify-between">
                 <Skeleton className="h-4 w-3/4 rounded-md" />
                 <Skeleton className="h-4 w-4 rounded-md" />

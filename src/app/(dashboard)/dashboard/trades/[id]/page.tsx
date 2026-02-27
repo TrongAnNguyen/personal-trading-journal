@@ -18,6 +18,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 interface TradeDetailPageProps {
   params: Promise<{ id: string }>;
 }

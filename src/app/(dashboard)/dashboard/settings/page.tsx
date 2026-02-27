@@ -12,6 +12,8 @@ import { SecuritySettings } from "@/components/settings/security-settings";
 import { SessionSettings } from "@/components/settings/session-settings";
 import { Suspense } from "react";
 
+export const dynamic = "force-dynamic";
+
 export default async function SettingsPage() {
   return (
     <div className="space-y-6">
