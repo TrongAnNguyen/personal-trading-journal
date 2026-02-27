@@ -60,10 +60,14 @@ export function CreateAccountDialog() {
   const onSubmit = async (data: CreateAccountInput) => {
     startTransition(async () => {
       try {
-        await createAccount(data);
-        setOpen(false);
-        form.reset();
-        router.refresh();
+        const result = await createAccount(data);
+        if (result.success) {
+          setOpen(false);
+          form.reset();
+          router.refresh();
+        } else {
+          console.error("Failed to create account:", result.error);
+        }
       } catch (error) {
         console.error("Failed to create account:", error);
       }

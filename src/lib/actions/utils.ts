@@ -1,5 +1,3 @@
-"use server";
-
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { z } from "zod";
 
@@ -41,7 +39,9 @@ export function createAction<
   return async (
     input: TInputSchema extends z.ZodTypeAny ? z.infer<TInputSchema> : any,
   ): Promise<
-    ActionResponse<TOutputSchema extends z.ZodTypeAny ? z.infer<TOutputSchema> : any>
+    ActionResponse<
+      TOutputSchema extends z.ZodTypeAny ? z.infer<TOutputSchema> : any
+    >
   > => {
     try {
       let userId: string | undefined;
@@ -51,7 +51,9 @@ export function createAction<
 
       const validatedInput = options.input ? options.input.parse(input) : input;
       const result = await handler(validatedInput, userId);
-      const validatedOutput = options.output ? options.output.parse(result) : result;
+      const validatedOutput = options.output
+        ? options.output.parse(result)
+        : result;
 
       return { success: true, data: validatedOutput };
     } catch (error) {

@@ -265,7 +265,7 @@ export const getTrades = cache(async function (
     tags: t.tags?.map((tt: any) => tt.tag) ?? [],
   }));
 
-  const serialized = z.array(tradeSchema).parse(trades);
+  const serialized = z.array(tradeSchema).parse(trades) as Trade[];
 
   try {
     await redis.set(cacheKey, serialized, CacheTTL.OneWeek);
@@ -305,7 +305,7 @@ export async function getTrade(tradeId: string): Promise<Trade | null> {
     tags: trade.tags.map((t) => t.tag),
   };
 
-  const serialized = tradeSchema.parse(flattenedTrade);
+  const serialized = tradeSchema.parse(flattenedTrade) as Trade;
 
   try {
     if (serialized) {

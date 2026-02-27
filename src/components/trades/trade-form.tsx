@@ -53,9 +53,13 @@ export function TradeForm({ accounts, initialChecklist = [] }: TradeFormProps) {
   const onSubmit = form.handleSubmit((data) => {
     startTransition(async () => {
       try {
-        await createTrade(data as CreateTradeInput);
-        form.reset();
-        router.push("/dashboard/trades");
+        const result = await createTrade(data as CreateTradeInput);
+        if (result.success) {
+          form.reset();
+          router.push("/dashboard/trades");
+        } else {
+          console.error("Failed to create trade:", result.error);
+        }
       } catch (error) {
         console.error("Failed to create trade:", error);
       }

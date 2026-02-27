@@ -56,14 +56,20 @@ export function TagSelector({
     setIsCreating(true);
     try {
       // Default new tags to 'STRATEGY' type for now, could expand UI to select type
-      const newTag = await createTag({
+      const result = await createTag({
         name: inputValue.trim(),
         type: TagType.STRATEGY,
         color: "#6b7280", // Default gray
       });
-      setTags((prev) => [...prev, newTag]);
-      handleSelect(newTag.id);
-      setInputValue("");
+
+      if (result.success) {
+        const newTag = result.data;
+        setTags((prev) => [...prev, newTag]);
+        handleSelect(newTag.id);
+        setInputValue("");
+      } else {
+        console.error("Failed to create tag:", result.error);
+      }
     } catch (error) {
       console.error("Failed to create tag:", error);
     } finally {

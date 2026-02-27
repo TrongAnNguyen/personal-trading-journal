@@ -27,7 +27,10 @@ export function TradeListTable({ trades }: TradeListTableProps) {
     setDeletingId(tradeId);
     startTransition(async () => {
       try {
-        await deleteTrade(tradeId);
+        const result = await deleteTrade(tradeId);
+        if (!result.success) {
+          console.error("Failed to delete trade:", result.error);
+        }
       } catch (error) {
         console.error("Failed to delete trade:", error);
       } finally {

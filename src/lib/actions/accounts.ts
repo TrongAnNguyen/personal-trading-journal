@@ -30,7 +30,7 @@ export const getAccounts = cache(async function (): Promise<Account[]> {
     orderBy: { createdAt: "desc" },
   });
 
-  const serialized = z.array(accountSchema).parse(accounts);
+  const serialized = z.array(accountSchema).parse(accounts) as Account[];
 
   try {
     await redis.set(cacheKey, serialized, CacheTTL.OneWeek);

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AssetClass, TradeSide, Emotion, TagType } from "./enums";
+import { AssetClass, TradeSide, Emotion, TagType, TradeStatus } from "./enums";
 
 export const createTradeSchema = z.object({
   accountId: z.string().min(1, "Account is required"),
@@ -104,7 +104,7 @@ export const tradeSchema = z.object({
   fees: decimalSchema.nullable().optional(),
   stopLoss: decimalSchema.nullable().optional(),
   takeProfit: decimalSchema.nullable().optional(),
-  status: z.string(),
+  status: z.nativeEnum(TradeStatus),
   entryTime: z.date(),
   exitTime: z.date().nullable().optional(),
   emotionEntry: z.nativeEnum(Emotion).nullable().optional(),
