@@ -3,18 +3,23 @@
 import { CacheTTL } from "@/constants";
 import { prisma } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import { serialize } from "@/lib/utils";
+import {
+  Account,
+  accountSchema,
+  createAccountSchema,
+} from "@/types/trade";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
-import { getAuthenticatedUserId } from "./utils";
+import { z } from "zod";
+import { createAction, getAuthenticatedUserId } from "./utils";
 
-export const getAccounts = cache(async function () {
+export const getAccounts = cache(async function (): Promise<Account[]> {
   const userId = await getAuthenticatedUserId();
 
   const cacheKey = `user:${userId}:accounts`;
 
   try {
-    const cached = await redis.get<any[]>(cacheKey);
+    const cached = await redis.get<Account[]>(cacheKey);
     if (cached) return cached;
   } catch (error) {
     console.error("Cache retrieval failed:", error);
@@ -25,7 +30,7 @@ export const getAccounts = cache(async function () {
     orderBy: { createdAt: "desc" },
   });
 
-  const serialized = serialize(accounts);
+  const serialized = z.array(accountSchema).parse(accounts);
 
   try {
     await redis.set(cacheKey, serialized, CacheTTL.OneWeek);
@@ -36,23 +41,24 @@ export const getAccounts = cache(async function () {
   return serialized;
 });
 
-export async function createAccount(input: {
-  name: string;
-  initialBalance: number;
-  currency: string;
-}) {
-  const userId = await getAuthenticatedUserId();
+export const createAccount = createAction(
+  {
+    input: createAccountSchema,
+    output: accountSchema,
+    authenticated: true,
+  },
+  async (input, userId) => {
+    const account = await prisma.account.create({
+      data: {
+        userId: userId!,
+        name: input.name,
+        initialBalance: input.initialBalance,
+        currency: input.currency,
+      },
+    });
 
-  const account = await prisma.account.create({
-    data: {
-      userId,
-      name: input.name,
-      initialBalance: input.initialBalance,
-      currency: input.currency,
-    },
-  });
-
-  await redis.del(`user:${userId}:accounts`);
-  revalidatePath("/dashboard/accounts");
-  return serialize(account);
-}
+    await redis.del(`user:${userId}:accounts`);
+    revalidatePath("/dashboard/accounts");
+    return account;
+  },
+);

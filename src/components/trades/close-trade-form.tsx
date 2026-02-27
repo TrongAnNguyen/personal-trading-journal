@@ -71,7 +71,7 @@ export function CloseTradeForm({
   const onSubmit = form.handleSubmit((data) => {
     startTransition(async () => {
       try {
-        await closeTrade(tradeId, data as CloseTradeInput);
+        await closeTrade({ tradeId, input: data as CloseTradeInput });
         router.push("/dashboard/trades");
       } catch (error) {
         console.error("Failed to close trade:", error);

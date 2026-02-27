@@ -60,3 +60,72 @@ export const createAccountSchema = z.object({
 });
 
 export type CreateAccountInput = z.infer<typeof createAccountSchema>;
+
+// --- Output Schemas ---
+
+export const decimalSchema = z.preprocess((val) => {
+  if (typeof val === "object" && val && "toNumber" in (val as any)) {
+    return (val as any).toNumber();
+  }
+  return val;
+}, z.number());
+
+export const tagSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  type: z.nativeEnum(TagType),
+  color: z.string().nullable().optional(),
+});
+
+export const checklistItemSchema = z.object({
+  id: z.string(),
+  tradeId: z.string(),
+  text: z.string(),
+  checked: z.boolean(),
+});
+
+export const attachmentSchema = z.object({
+  id: z.string(),
+  tradeId: z.string(),
+  imageUrl: z.string(),
+  context: z.string(),
+  caption: z.string().nullable().optional(),
+});
+
+export const tradeSchema = z.object({
+  id: z.string(),
+  accountId: z.string(),
+  symbol: z.string(),
+  assetClass: z.nativeEnum(AssetClass),
+  side: z.nativeEnum(TradeSide),
+  entryPrice: decimalSchema,
+  exitPrice: decimalSchema.nullable().optional(),
+  volume: decimalSchema,
+  fees: decimalSchema.nullable().optional(),
+  stopLoss: decimalSchema.nullable().optional(),
+  takeProfit: decimalSchema.nullable().optional(),
+  status: z.string(),
+  entryTime: z.date(),
+  exitTime: z.date().nullable().optional(),
+  emotionEntry: z.nativeEnum(Emotion).nullable().optional(),
+  emotionExit: z.nativeEnum(Emotion).nullable().optional(),
+  notes: z.string().nullable().optional(),
+  lessonsLearned: z.string().nullable().optional(),
+  pnl: decimalSchema.nullable().optional(),
+  riskReward: decimalSchema.nullable().optional(),
+  tags: z.array(tagSchema).optional(),
+  checklist: z.array(checklistItemSchema).optional(),
+  attachments: z.array(attachmentSchema).optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const accountSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  name: z.string(),
+  initialBalance: decimalSchema,
+  currency: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});

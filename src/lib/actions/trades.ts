@@ -4,11 +4,11 @@ import { CacheTTL } from "@/constants";
 import { calculatePnL, calculateRiskReward } from "@/lib/calculations";
 import { prisma } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import { serialize } from "@/lib/utils";
 import {
   closeTradeSchema,
   createTradeSchema,
   Trade,
+  tradeSchema,
   updateTradeSchema,
   type CloseTradeInput,
   type CreateTradeInput,
@@ -16,203 +16,226 @@ import {
 } from "@/types/trade";
 import { revalidatePath } from "next/cache";
 import { cache } from "react";
-import { getAuthenticatedUserId } from "./utils";
+import { z } from "zod";
+import { createAction, getAuthenticatedUserId } from "./utils";
 
-export async function createTrade(input: CreateTradeInput) {
-  const userId = await getAuthenticatedUserId();
-
-  const validated = createTradeSchema.parse(input);
-
-  const trade = await prisma.trade.create({
-    data: {
-      accountId: validated.accountId,
-      symbol: validated.symbol.toUpperCase(),
-      assetClass: validated.assetClass,
-      side: validated.side,
-      entryPrice: validated.entryPrice,
-      volume: validated.volume,
-      fees: validated.fees ?? 0,
-      stopLoss: validated.stopLoss,
-      takeProfit: validated.takeProfit,
-      entryTime: validated.entryTime ?? new Date(),
-      emotionEntry: validated.emotionEntry,
-      notes: validated.notes,
-      status: "OPEN",
-      checklist: {
-        create: validated.checklist.map((item) => ({
-          text: item.text,
-          checked: item.checked,
-        })),
+export const createTrade = createAction(
+  {
+    input: createTradeSchema,
+    output: tradeSchema,
+    authenticated: true,
+  },
+  async (validated, userId) => {
+    const trade = await prisma.trade.create({
+      data: {
+        accountId: validated.accountId,
+        symbol: validated.symbol.toUpperCase(),
+        assetClass: validated.assetClass,
+        side: validated.side,
+        entryPrice: validated.entryPrice,
+        volume: validated.volume,
+        fees: validated.fees ?? 0,
+        stopLoss: validated.stopLoss,
+        takeProfit: validated.takeProfit,
+        entryTime: validated.entryTime ?? new Date(),
+        emotionEntry: validated.emotionEntry,
+        notes: validated.notes,
+        status: "OPEN",
+        checklist: {
+          create: validated.checklist.map((item) => ({
+            text: item.text,
+            checked: item.checked,
+          })),
+        },
+        tags: {
+          create: validated.tags.map((tagId) => ({
+            tagId,
+          })),
+        },
       },
-      tags: {
-        create: validated.tags.map((tagId) => ({
-          tagId,
-        })),
+      include: {
+        tags: { include: { tag: true } },
+        checklist: true,
       },
-    },
-    include: {
-      tags: { include: { tag: true } },
-      checklist: true,
-    },
-  });
+    });
 
-  await redis.delPrefix(`user:${userId}:trades:`);
-  revalidatePath("/dashboard/trades");
-  revalidatePath("/dashboard");
+    await redis.delPrefix(`user:${userId}:trades:`);
+    revalidatePath("/dashboard/trades");
+    revalidatePath("/dashboard");
 
-  return { success: true, trade: serialize(trade) };
-}
+    return {
+      ...trade,
+      tags: trade.tags.map((t) => t.tag),
+    };
+  },
+);
 
-export async function closeTrade(tradeId: string, input: CloseTradeInput) {
-  const userId = await getAuthenticatedUserId();
-
-  const validated = closeTradeSchema.parse(input);
-
-  const existingTrade = await prisma.trade.findUnique({
-    where: { id: tradeId },
-  });
-
-  if (!existingTrade) {
-    throw new Error("Trade not found");
-  }
-
-  const pnl = calculatePnL({
-    entryPrice: Number(existingTrade.entryPrice),
-    exitPrice: validated.exitPrice,
-    volume: Number(existingTrade.volume),
-    fees: Number(existingTrade.fees ?? 0) + (validated.fees ?? 0),
-    side: existingTrade.side,
-  });
-
-  const riskReward = calculateRiskReward({
-    entryPrice: Number(existingTrade.entryPrice),
-    exitPrice: validated.exitPrice,
-    stopLoss: existingTrade.stopLoss ? Number(existingTrade.stopLoss) : null,
-  });
-
-  const trade = await prisma.trade.update({
-    where: { id: tradeId },
-    data: {
-      exitPrice: validated.exitPrice,
-      exitTime: validated.exitTime ?? new Date(),
-      emotionExit: validated.emotionExit,
-      lessonsLearned: validated.lessonsLearned,
-      fees: Number(existingTrade.fees ?? 0) + (validated.fees ?? 0),
-      status: "CLOSED",
-      pnl,
-      riskReward,
-    },
-    include: {
-      tags: { include: { tag: true } },
-      checklist: true,
-      attachments: true,
-    },
-  });
-
-  await redis.delPrefix(`user:${userId}:trades:`);
-  revalidatePath("/dashboard/trades");
-  revalidatePath("/dashboard");
-
-  return { success: true, trade: serialize(trade) };
-}
-
-export async function updateTrade(tradeId: string, input: UpdateTradeInput) {
-  const userId = await getAuthenticatedUserId();
-
-  const validated = updateTradeSchema.parse(input);
-
-  let pnl: number | null = null;
-  let riskReward: number | null = null;
-
-  if (validated.exitPrice) {
+export const closeTrade = createAction(
+  {
+    input: z.object({ tradeId: z.string(), input: closeTradeSchema }),
+    output: tradeSchema,
+    authenticated: true,
+  },
+  async ({ tradeId, input: validated }, userId) => {
     const existingTrade = await prisma.trade.findUnique({
       where: { id: tradeId },
     });
 
-    if (existingTrade) {
-      pnl = calculatePnL({
-        entryPrice: validated.entryPrice ?? Number(existingTrade.entryPrice),
-        exitPrice: validated.exitPrice,
-        volume: validated.volume ?? Number(existingTrade.volume),
-        fees: validated.fees ?? Number(existingTrade.fees ?? 0),
-        side: validated.side ?? existingTrade.side,
-      });
-
-      riskReward = calculateRiskReward({
-        entryPrice: validated.entryPrice ?? Number(existingTrade.entryPrice),
-        exitPrice: validated.exitPrice,
-        stopLoss:
-          validated.stopLoss ??
-          (existingTrade.stopLoss ? Number(existingTrade.stopLoss) : null),
-      });
+    if (!existingTrade) {
+      throw new Error("Trade not found");
     }
-  }
 
-  const trade = await prisma.trade.update({
-    where: { id: tradeId },
-    data: {
-      ...(validated.symbol && { symbol: validated.symbol.toUpperCase() }),
-      ...(validated.assetClass && { assetClass: validated.assetClass }),
-      ...(validated.side && { side: validated.side }),
-      ...(validated.entryPrice !== undefined && {
-        entryPrice: validated.entryPrice,
-      }),
-      ...(validated.exitPrice !== undefined && {
+    const pnl = calculatePnL({
+      entryPrice: Number(existingTrade.entryPrice),
+      exitPrice: validated.exitPrice,
+      volume: Number(existingTrade.volume),
+      fees: Number(existingTrade.fees ?? 0) + (validated.fees ?? 0),
+      side: existingTrade.side,
+    });
+
+    const riskReward = calculateRiskReward({
+      entryPrice: Number(existingTrade.entryPrice),
+      exitPrice: validated.exitPrice,
+      stopLoss: existingTrade.stopLoss ? Number(existingTrade.stopLoss) : null,
+    });
+
+    const trade = await prisma.trade.update({
+      where: { id: tradeId },
+      data: {
         exitPrice: validated.exitPrice,
-      }),
-      ...(validated.volume !== undefined && { volume: validated.volume }),
-      ...(validated.fees !== undefined && { fees: validated.fees }),
-      ...(validated.stopLoss !== undefined && { stopLoss: validated.stopLoss }),
-      ...(validated.takeProfit !== undefined && {
-        takeProfit: validated.takeProfit,
-      }),
-      ...(validated.emotionEntry !== undefined && {
-        emotionEntry: validated.emotionEntry,
-      }),
-      ...(validated.emotionExit !== undefined && {
+        exitTime: validated.exitTime ?? new Date(),
         emotionExit: validated.emotionExit,
-      }),
-      ...(validated.notes !== undefined && { notes: validated.notes }),
-      ...(validated.lessonsLearned !== undefined && {
         lessonsLearned: validated.lessonsLearned,
-      }),
-      ...(pnl !== null && { pnl }),
-      ...(riskReward !== null && { riskReward }),
-      ...(validated.exitPrice && { status: "CLOSED" }),
-    },
-    include: {
-      tags: { include: { tag: true } },
-      checklist: true,
-      attachments: true,
-    },
-  });
+        fees: Number(existingTrade.fees ?? 0) + (validated.fees ?? 0),
+        status: "CLOSED",
+        pnl,
+        riskReward,
+      },
+      include: {
+        tags: { include: { tag: true } },
+        checklist: true,
+        attachments: true,
+      },
+    });
 
-  await redis.delPrefix(`user:${userId}:trades:`);
-  revalidatePath("/dashboard/trades");
-  revalidatePath(`/dashboard/trades/${tradeId}`);
-  revalidatePath("/dashboard");
+    await redis.delPrefix(`user:${userId}:trades:`);
+    revalidatePath("/dashboard/trades");
+    revalidatePath("/dashboard");
 
-  return { success: true, trade: serialize(trade) };
-}
+    return {
+      ...trade,
+      tags: trade.tags.map((t) => t.tag),
+    };
+  },
+);
 
-export async function deleteTrade(tradeId: string) {
-  const userId = await getAuthenticatedUserId();
+export const updateTrade = createAction(
+  {
+    input: z.object({ tradeId: z.string(), input: updateTradeSchema }),
+    output: tradeSchema,
+    authenticated: true,
+  },
+  async ({ tradeId, input: validated }, userId) => {
+    let pnl: number | null = null;
+    let riskReward: number | null = null;
 
-  await prisma.trade.delete({
-    where: { id: tradeId },
-  });
+    if (validated.exitPrice) {
+      const existingTrade = await prisma.trade.findUnique({
+        where: { id: tradeId },
+      });
 
-  await redis.delPrefix(`user:${userId}:trades:`);
-  revalidatePath("/dashboard/trades");
-  revalidatePath("/dashboard");
+      if (existingTrade) {
+        pnl = calculatePnL({
+          entryPrice: validated.entryPrice ?? Number(existingTrade.entryPrice),
+          exitPrice: validated.exitPrice,
+          volume: validated.volume ?? Number(existingTrade.volume),
+          fees: validated.fees ?? Number(existingTrade.fees ?? 0),
+          side: validated.side ?? existingTrade.side,
+        });
 
-  return { success: true };
-}
+        riskReward = calculateRiskReward({
+          entryPrice: validated.entryPrice ?? Number(existingTrade.entryPrice),
+          exitPrice: validated.exitPrice,
+          stopLoss:
+            validated.stopLoss ??
+            (existingTrade.stopLoss ? Number(existingTrade.stopLoss) : null),
+        });
+      }
+    }
+
+    const trade = await prisma.trade.update({
+      where: { id: tradeId },
+      data: {
+        ...(validated.symbol && { symbol: validated.symbol.toUpperCase() }),
+        ...(validated.assetClass && { assetClass: validated.assetClass }),
+        ...(validated.side && { side: validated.side }),
+        ...(validated.entryPrice !== undefined && {
+          entryPrice: validated.entryPrice,
+        }),
+        ...(validated.exitPrice !== undefined && {
+          exitPrice: validated.exitPrice,
+        }),
+        ...(validated.volume !== undefined && { volume: validated.volume }),
+        ...(validated.fees !== undefined && { fees: validated.fees }),
+        ...(validated.stopLoss !== undefined && { stopLoss: validated.stopLoss }),
+        ...(validated.takeProfit !== undefined && {
+          takeProfit: validated.takeProfit,
+        }),
+        ...(validated.emotionEntry !== undefined && {
+          emotionEntry: validated.emotionEntry,
+        }),
+        ...(validated.emotionExit !== undefined && {
+          emotionExit: validated.emotionExit,
+        }),
+        ...(validated.notes !== undefined && { notes: validated.notes }),
+        ...(validated.lessonsLearned !== undefined && {
+          lessonsLearned: validated.lessonsLearned,
+        }),
+        ...(pnl !== null && { pnl }),
+        ...(riskReward !== null && { riskReward }),
+        ...(validated.exitPrice && { status: "CLOSED" }),
+      },
+      include: {
+        tags: { include: { tag: true } },
+        checklist: true,
+        attachments: true,
+      },
+    });
+
+    await redis.delPrefix(`user:${userId}:trades:`);
+    revalidatePath("/dashboard/trades");
+    revalidatePath(`/dashboard/trades/${tradeId}`);
+    revalidatePath("/dashboard");
+
+    return {
+      ...trade,
+      tags: trade.tags.map((t) => t.tag),
+    };
+  },
+);
+
+export const deleteTrade = createAction(
+  {
+    input: z.string(),
+    authenticated: true,
+  },
+  async (tradeId, userId) => {
+    await prisma.trade.delete({
+      where: { id: tradeId },
+    });
+
+    await redis.delPrefix(`user:${userId}:trades:`);
+    revalidatePath("/dashboard/trades");
+    revalidatePath("/dashboard");
+
+    return { success: true };
+  },
+);
 
 export const getTrades = cache(async function (
   accountId?: string,
   status?: "OPEN" | "CLOSED",
-) {
+): Promise<Trade[]> {
   const userId = await getAuthenticatedUserId();
 
   const cacheKey = `user:${userId}:trades:acc:${accountId || "all"}:stat:${status || "all"}`;
@@ -237,12 +260,12 @@ export const getTrades = cache(async function (
     orderBy: { entryTime: "desc" },
   });
 
-  const trades: Trade[] = rawTrades.map((t: any) => ({
+  const trades = rawTrades.map((t: any) => ({
     ...t,
     tags: t.tags?.map((tt: any) => tt.tag) ?? [],
   }));
 
-  const serialized = serialize(trades);
+  const serialized = z.array(tradeSchema).parse(trades);
 
   try {
     await redis.set(cacheKey, serialized, CacheTTL.OneWeek);
@@ -253,7 +276,7 @@ export const getTrades = cache(async function (
   return serialized;
 });
 
-export async function getTrade(tradeId: string) {
+export async function getTrade(tradeId: string): Promise<Trade | null> {
   const userId = await getAuthenticatedUserId();
 
   const cacheKey = `user:${userId}:trades:id:${tradeId}`;
@@ -282,7 +305,7 @@ export async function getTrade(tradeId: string) {
     tags: trade.tags.map((t) => t.tag),
   };
 
-  const serialized = serialize(flattenedTrade);
+  const serialized = tradeSchema.parse(flattenedTrade);
 
   try {
     if (serialized) {

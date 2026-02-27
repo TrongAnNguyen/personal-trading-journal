@@ -6,6 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * @deprecated Use schema-driven serialization (Zod) or native RSC serialization instead.
  * Recursively serializes a value to be safe for client-side transmission.
  * Converts Prisma Decimal to number. Keeps Date objects as is (Next.js RSC can handle them).
  */

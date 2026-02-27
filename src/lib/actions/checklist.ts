@@ -3,7 +3,6 @@
 import { CacheTTL } from "@/constants";
 import { prisma } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import { serialize } from "@/lib/utils";
 import type { ChecklistTemplate } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getAuthenticatedUserId } from "./utils";
@@ -24,17 +23,15 @@ export async function getDisciplineChecklist(): Promise<ChecklistTemplate | null
     where: { userId },
   });
 
-  const serialized = serialize(template) as ChecklistTemplate | null;
+  if (!template) return null;
 
   try {
-    if (serialized) {
-      await redis.set(cacheKey, serialized, CacheTTL.OneWeek);
-    }
+    await redis.set(cacheKey, template, CacheTTL.OneWeek);
   } catch (error) {
     console.error("Redis error:", error);
   }
 
-  return serialized;
+  return template;
 }
 
 export async function updateDisciplineChecklist(items: string[]) {
@@ -62,10 +59,9 @@ export async function updateDisciplineChecklist(items: string[]) {
   }
 
   try {
-    await redis.set(cacheKey, serialize(updatedTemplate), CacheTTL.OneWeek);
+    await redis.set(cacheKey, updatedTemplate, CacheTTL.OneWeek);
   } catch (error) {
     console.error("Redis error:", error);
-    // Even if cache update fails, DB is updated, so we just log it
   }
 
   revalidatePath("/dashboard/settings");

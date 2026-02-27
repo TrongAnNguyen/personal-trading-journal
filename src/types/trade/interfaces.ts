@@ -1,4 +1,3 @@
-import { Decimal } from "@prisma/client/runtime/client";
 import {
   AssetClass,
   TradeSide,
@@ -62,7 +61,7 @@ export interface Account {
   id: string;
   userId: string;
   name: string;
-  initialBalance: Decimal;
+  initialBalance: number;
   currency: string;
   createdAt: Date;
   updatedAt: Date;

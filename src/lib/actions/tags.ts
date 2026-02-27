@@ -3,8 +3,9 @@
 import { CacheTTL } from "@/constants";
 import { prisma } from "@/lib/db";
 import { redis } from "@/lib/redis";
-import { serialize } from "@/lib/utils";
-import { getAuthenticatedUserId } from "./utils";
+import { createTagSchema, tagSchema } from "@/types/trade";
+import { z } from "zod";
+import { createAction, getAuthenticatedUserId } from "./utils";
 
 export async function getTags() {
   const userId = await getAuthenticatedUserId();
@@ -22,7 +23,7 @@ export async function getTags() {
     orderBy: { name: "asc" },
   });
 
-  const serialized = serialize(tags);
+  const serialized = z.array(tagSchema).parse(tags);
 
   try {
     await redis.set(cacheKey, serialized, CacheTTL.OneWeek);
@@ -33,21 +34,22 @@ export async function getTags() {
   return serialized;
 }
 
-export async function createTag(input: {
-  name: string;
-  type: string;
-  color?: string;
-}) {
-  const userId = await getAuthenticatedUserId();
+export const createTag = createAction(
+  {
+    input: createTagSchema,
+    output: tagSchema,
+    authenticated: true,
+  },
+  async (input, userId) => {
+    const tag = await prisma.tag.create({
+      data: {
+        name: input.name,
+        type: input.type,
+        color: input.color,
+      },
+    });
 
-  const tag = await prisma.tag.create({
-    data: {
-      name: input.name,
-      type: input.type as "STRATEGY" | "MISTAKE" | "SETUP" | "MARKET_CONDITION",
-      color: input.color,
-    },
-  });
-
-  await redis.del(`user:${userId}:tags`);
-  return serialize(tag);
-}
+    await redis.del(`user:${userId}:tags`);
+    return tag;
+  },
+);
