@@ -1,2 +1,0 @@
-description="Use when implementing a task - follow the plan, check ACs, track progress"
-prompt = "Use skill kn-implement to {{args}}"

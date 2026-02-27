@@ -1,2 +1,0 @@
-description="Use when creating a specification document for a feature (SDD workflow)"
-prompt = "Use skill kn-spec to {{args}}"
