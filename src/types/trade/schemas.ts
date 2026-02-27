@@ -1,5 +1,12 @@
 import { z } from "zod";
-import { AssetClass, TradeSide, Emotion, TagType, TradeStatus } from "./enums";
+import {
+  AssetClass,
+  TradeSide,
+  Emotion,
+  TagType,
+  TradeStatus,
+  AttachmentContext,
+} from "./enums";
 
 export const createTradeSchema = z.object({
   accountId: z.string().min(1, "Account is required"),
@@ -88,7 +95,7 @@ export const attachmentSchema = z.object({
   id: z.string(),
   tradeId: z.string(),
   imageUrl: z.string(),
-  context: z.string(),
+  context: z.nativeEnum(AttachmentContext),
   caption: z.string().nullable().optional(),
 });
 
@@ -126,6 +133,15 @@ export const accountSchema = z.object({
   name: z.string(),
   initialBalance: decimalSchema,
   currency: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const userSchema = z.object({
+  id: z.string(),
+  email: z.string(),
+  name: z.string().nullable().optional(),
+  settings: z.record(z.unknown()).nullable().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
