@@ -1,0 +1,47 @@
+{
+  "taskId": "uaf608",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "uaf608",
+      "version": 1,
+      "timestamp": "2026-03-01T03:25:02.042Z",
+      "changes": [
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [],
+          "newValue": [
+            {
+              "text": "Ensure calculations correctly return null or fallback values when inputs are missing",
+              "completed": false
+            },
+            {
+              "text": "Update UI components to explicitly check for and handle null calculation outputs gracefully",
+              "completed": false
+            }
+          ]
+        }
+      ],
+      "snapshot": {
+        "title": "Handle Calculation Edge Cases Safely",
+        "description": "Calculation functions in src/lib/calculations.ts return null when data like exitPrice or stopLoss is missing. Ensure all consuming UI components (charts, metrics cards) explicitly handle null values to avoid NaN or runtime crashes.",
+        "status": "todo",
+        "priority": "medium",
+        "labels": [
+          "tech-debt"
+        ],
+        "acceptanceCriteria": [
+          {
+            "text": "Ensure calculations correctly return null or fallback values when inputs are missing",
+            "completed": false
+          },
+          {
+            "text": "Update UI components to explicitly check for and handle null calculation outputs gracefully",
+            "completed": false
+          }
+        ]
+      }
+    }
+  ]
+}

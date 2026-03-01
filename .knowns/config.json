@@ -35,6 +35,7 @@
     "semanticSearch": {
       "enabled": true,
       "model": "gte-small"
-    }
+    },
+    "serverPort": 6420
   }
 }

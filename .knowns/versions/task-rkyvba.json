@@ -1,0 +1,48 @@
+{
+  "taskId": "rkyvba",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "rkyvba",
+      "version": 1,
+      "timestamp": "2026-03-01T03:25:01.998Z",
+      "changes": [
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [],
+          "newValue": [
+            {
+              "text": "Extract database logic from trades.ts and knowledge-base.ts into a service layer",
+              "completed": false
+            },
+            {
+              "text": "Ensure actions only handle request validation, response formatting, and service calling",
+              "completed": false
+            }
+          ]
+        }
+      ],
+      "snapshot": {
+        "title": "Refactor God Action Files",
+        "description": "trades.ts and knowledge-base.ts are becoming large and handle validation, DB logic, caching, and revalidation. Extract database logic into service classes/functions and keep actions focused on request handling.",
+        "status": "todo",
+        "priority": "medium",
+        "labels": [
+          "tech-debt",
+          "refactoring"
+        ],
+        "acceptanceCriteria": [
+          {
+            "text": "Extract database logic from trades.ts and knowledge-base.ts into a service layer",
+            "completed": false
+          },
+          {
+            "text": "Ensure actions only handle request validation, response formatting, and service calling",
+            "completed": false
+          }
+        ]
+      }
+    }
+  ]
+}

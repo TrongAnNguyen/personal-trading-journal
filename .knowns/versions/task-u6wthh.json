@@ -1,0 +1,39 @@
+{
+  "taskId": "u6wthh",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "u6wthh",
+      "version": 1,
+      "timestamp": "2026-03-01T03:25:01.889Z",
+      "changes": [
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [],
+          "newValue": [
+            {
+              "text": "Implement error boundary or fallback for cache failures in getTrades and getTrade",
+              "completed": false
+            }
+          ]
+        }
+      ],
+      "snapshot": {
+        "title": "Fix Swallowed Cache Errors in Trades Actions",
+        "description": "Redis errors are caught and logged but not bubbled up in src/lib/actions/trades.ts (getTrades and getTrade). Implement a more robust error boundary or fallback strategy for the caching layer.",
+        "status": "todo",
+        "priority": "medium",
+        "labels": [
+          "tech-debt"
+        ],
+        "acceptanceCriteria": [
+          {
+            "text": "Implement error boundary or fallback for cache failures in getTrades and getTrade",
+            "completed": false
+          }
+        ]
+      }
+    }
+  ]
+}

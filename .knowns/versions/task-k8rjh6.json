@@ -1,0 +1,102 @@
+{
+  "taskId": "k8rjh6",
+  "currentVersion": 2,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "k8rjh6",
+      "version": 1,
+      "timestamp": "2026-03-01T03:25:01.947Z",
+      "changes": [
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [],
+          "newValue": [
+            {
+              "text": "Ensure userId is explicitly included in Prisma where clause for getTrade and updateTrade",
+              "completed": false
+            },
+            {
+              "text": "Verify fix prevents unauthorized access to trades",
+              "completed": false
+            }
+          ]
+        }
+      ],
+      "snapshot": {
+        "title": "Fix Potential IDOR in Trades Action",
+        "description": "getTrade and updateTrade fetch/modify records by id without explicitly including userId in the Prisma where clause in src/lib/actions/trades.ts. Always include userId in Prisma queries: prisma.trade.findUnique({ where: { id, userId } }).",
+        "status": "todo",
+        "priority": "high",
+        "labels": [
+          "security"
+        ],
+        "acceptanceCriteria": [
+          {
+            "text": "Ensure userId is explicitly included in Prisma where clause for getTrade and updateTrade",
+            "completed": false
+          },
+          {
+            "text": "Verify fix prevents unauthorized access to trades",
+            "completed": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "k8rjh6",
+      "version": 2,
+      "timestamp": "2026-03-01T03:29:57.027Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "done"
+        },
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [
+            {
+              "completed": false,
+              "text": "Ensure userId is explicitly included in Prisma where clause for getTrade and updateTrade"
+            },
+            {
+              "completed": false,
+              "text": "Verify fix prevents unauthorized access to trades"
+            }
+          ],
+          "newValue": [
+            {
+              "completed": true,
+              "text": "Ensure userId is explicitly included in Prisma where clause for getTrade and updateTrade"
+            },
+            {
+              "completed": true,
+              "text": "Verify fix prevents unauthorized access to trades"
+            }
+          ]
+        }
+      ],
+      "snapshot": {
+        "title": "Fix Potential IDOR in Trades Action",
+        "description": "getTrade and updateTrade fetch/modify records by id without explicitly including userId in the Prisma where clause in src/lib/actions/trades.ts. Always include userId in Prisma queries: prisma.trade.findUnique({ where: { id, userId } }).",
+        "status": "done",
+        "priority": "high",
+        "labels": [
+          "security"
+        ],
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "Ensure userId is explicitly included in Prisma where clause for getTrade and updateTrade"
+          },
+          {
+            "completed": true,
+            "text": "Verify fix prevents unauthorized access to trades"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "taskId": "bkw7u6",
+  "currentVersion": 1,
+  "versions": [
+    {
+      "id": "v1",
+      "taskId": "bkw7u6",
+      "version": 1,
+      "timestamp": "2026-03-01T03:25:02.084Z",
+      "changes": [
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [],
+          "newValue": [
+            {
+              "text": "Write unit tests for complex PnL and Risk/Reward calculations in src/lib/calculations.ts",
+              "completed": false
+            },
+            {
+              "text": "Write integration tests for CRUD operations in src/lib/actions/trades.ts",
+              "completed": false
+            }
+          ]
+        }
+      ],
+      "snapshot": {
+        "title": "Improve Test Coverage for Server Actions and Utilities",
+        "description": "Complex PnL and Risk/Reward calculations and critical CRUD server actions in src/lib/calculations.ts and src/lib/actions/trades.ts lack test coverage. Add required unit tests.",
+        "status": "todo",
+        "priority": "high",
+        "labels": [
+          "testing"
+        ],
+        "acceptanceCriteria": [
+          {
+            "text": "Write unit tests for complex PnL and Risk/Reward calculations in src/lib/calculations.ts",
+            "completed": false
+          },
+          {
+            "text": "Write integration tests for CRUD operations in src/lib/actions/trades.ts",
+            "completed": false
+          }
+        ]
+      }
+    }
+  ]
+}
