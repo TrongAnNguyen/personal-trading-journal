@@ -45,3 +45,6 @@ next-env.d.ts
 # knowns search index (rebuilt on demand)
 .knowns/search-index
 .knowns/.search
+
+# knowns search index (rebuilt on demand)
+.knowns/search-index/

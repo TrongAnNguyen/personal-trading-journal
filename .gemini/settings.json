@@ -11,34 +11,16 @@
           }
         ]
       }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node .gemini/hooks/gsd-check-update.js"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node .gemini/hooks/gsd-context-monitor.js"
-          }
-        ]
-      }
     ]
   },
   "experimental": {
     "enableAgents": true,
     "plan": true
   },
-  "statusLine": {
-    "type": "command",
-    "command": "node .gemini/hooks/gsd-statusline.js"
+  "mcpServers": {
+    "knowns": {
+      "command": "npx",
+      "args": ["-y", "knowns", "mcp"]
+    }
   }
 }
