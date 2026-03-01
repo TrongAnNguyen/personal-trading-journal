@@ -1,6 +1,6 @@
 {
   "taskId": "bkw7u6",
-  "currentVersion": 1,
+  "currentVersion": 2,
   "versions": [
     {
       "id": "v1",
@@ -39,6 +39,61 @@
           {
             "text": "Write integration tests for CRUD operations in src/lib/actions/trades.ts",
             "completed": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2",
+      "taskId": "bkw7u6",
+      "version": 2,
+      "timestamp": "2026-03-01T03:41:22.703Z",
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "todo",
+          "newValue": "done"
+        },
+        {
+          "field": "acceptanceCriteria",
+          "oldValue": [
+            {
+              "completed": false,
+              "text": "Write unit tests for complex PnL and Risk/Reward calculations in src/lib/calculations.ts"
+            },
+            {
+              "completed": false,
+              "text": "Write integration tests for CRUD operations in src/lib/actions/trades.ts"
+            }
+          ],
+          "newValue": [
+            {
+              "completed": true,
+              "text": "Write unit tests for complex PnL and Risk/Reward calculations in src/lib/calculations.ts"
+            },
+            {
+              "completed": true,
+              "text": "Write integration tests for CRUD operations in src/lib/actions/trades.ts"
+            }
+          ]
+        }
+      ],
+      "snapshot": {
+        "title": "Improve Test Coverage for Server Actions and Utilities",
+        "description": "Complex PnL and Risk/Reward calculations and critical CRUD server actions in src/lib/calculations.ts and src/lib/actions/trades.ts lack test coverage. Add required unit tests.",
+        "status": "done",
+        "priority": "high",
+        "labels": [
+          "testing"
+        ],
+        "acceptanceCriteria": [
+          {
+            "completed": true,
+            "text": "Write unit tests for complex PnL and Risk/Reward calculations in src/lib/calculations.ts"
+          },
+          {
+            "completed": true,
+            "text": "Write integration tests for CRUD operations in src/lib/actions/trades.ts"
           }
         ]
       }
