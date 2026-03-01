@@ -23,6 +23,11 @@ export const createTrade = createAction(
     authenticated: true,
   },
   async (validated, userId) => {
+    const account = await prisma.account.findFirst({
+      where: { id: validated.accountId, userId },
+    });
+    if (!account) throw new Error("Account not found or unauthorized");
+
     const trade = await prisma.trade.create({
       data: {
         accountId: validated.accountId,
@@ -74,8 +79,8 @@ export const closeTrade = createAction(
     authenticated: true,
   },
   async ({ tradeId, input: validated }, userId) => {
-    const existingTrade = await prisma.trade.findUnique({
-      where: { id: tradeId },
+    const existingTrade = await prisma.trade.findFirst({
+      where: { id: tradeId, account: { userId } },
     });
 
     if (!existingTrade) {
@@ -136,28 +141,30 @@ export const updateTrade = createAction(
     let pnl: number | null = null;
     let riskReward: number | null = null;
 
+    const existingTrade = await prisma.trade.findFirst({
+      where: { id: tradeId, account: { userId } },
+    });
+
+    if (!existingTrade) {
+      throw new Error("Trade not found or unauthorized");
+    }
+
     if (validated.exitPrice) {
-      const existingTrade = await prisma.trade.findUnique({
-        where: { id: tradeId },
+      pnl = calculatePnL({
+        entryPrice: validated.entryPrice ?? Number(existingTrade.entryPrice),
+        exitPrice: validated.exitPrice,
+        volume: validated.volume ?? Number(existingTrade.volume),
+        fees: validated.fees ?? Number(existingTrade.fees ?? 0),
+        side: validated.side ?? existingTrade.side,
       });
 
-      if (existingTrade) {
-        pnl = calculatePnL({
-          entryPrice: validated.entryPrice ?? Number(existingTrade.entryPrice),
-          exitPrice: validated.exitPrice,
-          volume: validated.volume ?? Number(existingTrade.volume),
-          fees: validated.fees ?? Number(existingTrade.fees ?? 0),
-          side: validated.side ?? existingTrade.side,
-        });
-
-        riskReward = calculateRiskReward({
-          entryPrice: validated.entryPrice ?? Number(existingTrade.entryPrice),
-          exitPrice: validated.exitPrice,
-          stopLoss:
-            validated.stopLoss ??
-            (existingTrade.stopLoss ? Number(existingTrade.stopLoss) : null),
-        });
-      }
+      riskReward = calculateRiskReward({
+        entryPrice: validated.entryPrice ?? Number(existingTrade.entryPrice),
+        exitPrice: validated.exitPrice,
+        stopLoss:
+          validated.stopLoss ??
+          (existingTrade.stopLoss ? Number(existingTrade.stopLoss) : null),
+      });
     }
 
     const trade = await prisma.trade.update({
@@ -219,6 +226,14 @@ export const deleteTrade = createAction(
     authenticated: true,
   },
   async (tradeId, userId) => {
+    const existingTrade = await prisma.trade.findFirst({
+      where: { id: tradeId, account: { userId } },
+    });
+
+    if (!existingTrade) {
+      throw new Error("Trade not found or unauthorized");
+    }
+
     await prisma.trade.delete({
       where: { id: tradeId },
     });
@@ -248,6 +263,7 @@ export const getTrades = cache(async function (
 
   const rawTrades = await prisma.trade.findMany({
     where: {
+      account: { userId },
       ...(accountId && { accountId }),
       ...(status && { status }),
     },
@@ -287,8 +303,8 @@ export async function getTrade(tradeId: string): Promise<Trade | null> {
     console.error("Cache retrieval failed:", error);
   }
 
-  const trade = await prisma.trade.findUnique({
-    where: { id: tradeId },
+  const trade = await prisma.trade.findFirst({
+    where: { id: tradeId, account: { userId } },
     include: {
       tags: { include: { tag: true } },
       checklist: true,
