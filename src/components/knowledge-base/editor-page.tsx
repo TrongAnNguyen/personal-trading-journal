@@ -1,24 +1,24 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { updateNote } from "@/lib/actions/knowledge-base";
 import { CheckCircle2, Loader2, Save } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useBeforeUnload } from "react-use";
-import KnowledgeBaseEditor from "./editor";
+import KnowledgeBaseEditor from "./editor-v2";
 
 interface Note {
   id: string;
   title: string;
-  content: string;
+  content: any;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export default function NoteEditor({ note }: { note: Note }) {
   const [title, setTitle] = useState(note.title);
-  const [content, setContent] = useState(note.content);
+  const [content, setContent] = useState<any>(note.content);
   const [isPending, startTransition] = useTransition();
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">(
     "idle",
@@ -38,13 +38,15 @@ export default function NoteEditor({ note }: { note: Note }) {
     currentContentRef.current = content;
   }, [content]);
 
-  const isDirty = title !== note.title || content !== note.content;
+  const isDirty =
+    title !== note.title ||
+    JSON.stringify(content) !== JSON.stringify(note.content);
 
   const save = useCallback(
-    async (newTitle: string, newContent: string) => {
+    async (newTitle: string, newContent: any) => {
       if (
         newTitle === initialTitleRef.current &&
-        newContent === initialContentRef.current
+        JSON.stringify(newContent) === JSON.stringify(initialContentRef.current)
       )
         return;
 
@@ -52,7 +54,7 @@ export default function NoteEditor({ note }: { note: Note }) {
       try {
         const res = await updateNote(note.id, {
           title: newTitle,
-          content: newContent,
+          content: JSON.parse(JSON.stringify(newContent)),
         });
         if (res.data) {
           initialTitleRef.current = newTitle;
@@ -87,7 +89,10 @@ export default function NoteEditor({ note }: { note: Note }) {
       const initialTitle = initialTitleRef.current;
       const initialContent = initialContentRef.current;
 
-      if (finalTitle !== initialTitle || finalContent !== initialContent) {
+      if (
+        finalTitle !== initialTitle ||
+        JSON.stringify(finalContent) !== JSON.stringify(initialContent)
+      ) {
         // Use a fire-and-forget updateNote call for unmount
         updateNote(note.id, {
           title: finalTitle,
@@ -137,7 +142,7 @@ export default function NoteEditor({ note }: { note: Note }) {
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex flex-1">
         <KnowledgeBaseEditor
           key={note.id}
           initialContent={content}

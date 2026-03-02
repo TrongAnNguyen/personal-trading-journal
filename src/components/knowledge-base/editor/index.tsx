@@ -14,8 +14,8 @@ export default function KnowledgeBaseEditor({
   initialContent,
   onChange,
 }: {
-  initialContent?: string;
-  onChange?: (content: string) => void;
+  initialContent?: any;
+  onChange?: (content: any) => void;
 }) {
   const [isUploading, setIsUploading] = useState(false);
 
@@ -79,9 +79,17 @@ export default function KnowledgeBaseEditor({
         suggestion,
       }),
     ],
-    content: initialContent || "<p>Start typing your notes here...</p>",
+    content: initialContent || {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [{ type: "text", text: "Start typing your notes here..." }],
+        },
+      ],
+    },
     onUpdate: ({ editor }) => {
-      onChange?.(editor.getHTML());
+      onChange?.(editor.getJSON());
     },
     editorProps: {
       attributes: {

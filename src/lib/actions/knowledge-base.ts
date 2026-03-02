@@ -184,7 +184,7 @@ export const getGraph = cache(async () => {
 
 export async function createNote(payload: {
   title?: string;
-  content?: string;
+  content?: any;
   isStrategyTemplate?: boolean;
 }) {
   try {
@@ -193,32 +193,140 @@ export async function createNote(payload: {
     let initialContent = payload.content;
     if (payload.isStrategyTemplate) {
       const title = payload.title || "New Strategy";
-      initialContent = `# ${title}
-
-## Hypothesis
-Explain the core logic behind this strategy...
-
-## Setup Rules
-- Rule 1
-- Rule 2
-
-## Entry Criteria
-- e.g. Price closes above MA20
-
-## Exit Rules (Take Profit / Stop Loss)
-- Take Profit at 2R
-- Stop Loss below swing low
-
-## Review & Updates
-- Initial review...
-`;
+      initialContent = {
+        type: "doc",
+        content: [
+          {
+            type: "heading",
+            attrs: { level: 1 },
+            content: [{ type: "text", text: title }],
+          },
+          {
+            type: "heading",
+            attrs: { level: 2 },
+            content: [{ type: "text", text: "Hypothesis" }],
+          },
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: "Explain the core logic behind this strategy...",
+              },
+            ],
+          },
+          {
+            type: "heading",
+            attrs: { level: 2 },
+            content: [{ type: "text", text: "Setup Rules" }],
+          },
+          {
+            type: "bulletList",
+            content: [
+              {
+                type: "listItem",
+                content: [
+                  {
+                    type: "paragraph",
+                    content: [{ type: "text", text: "Rule 1" }],
+                  },
+                ],
+              },
+              {
+                type: "listItem",
+                content: [
+                  {
+                    type: "paragraph",
+                    content: [{ type: "text", text: "Rule 2" }],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "heading",
+            attrs: { level: 2 },
+            content: [{ type: "text", text: "Entry Criteria" }],
+          },
+          {
+            type: "bulletList",
+            content: [
+              {
+                type: "listItem",
+                content: [
+                  {
+                    type: "paragraph",
+                    content: [
+                      { type: "text", text: "e.g. Price closes above MA20" },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "heading",
+            attrs: { level: 2 },
+            content: [
+              { type: "text", text: "Exit Rules (Take Profit / Stop Loss)" },
+            ],
+          },
+          {
+            type: "bulletList",
+            content: [
+              {
+                type: "listItem",
+                content: [
+                  {
+                    type: "paragraph",
+                    content: [{ type: "text", text: "Take Profit at 2R" }],
+                  },
+                ],
+              },
+              {
+                type: "listItem",
+                content: [
+                  {
+                    type: "paragraph",
+                    content: [
+                      { type: "text", text: "Stop Loss below swing low" },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "heading",
+            attrs: { level: 2 },
+            content: [{ type: "text", text: "Review & Updates" }],
+          },
+          {
+            type: "bulletList",
+            content: [
+              {
+                type: "listItem",
+                content: [
+                  {
+                    type: "paragraph",
+                    content: [{ type: "text", text: "Initial review..." }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
     }
 
     const note = await prisma.note.create({
       data: {
         userId,
         title: payload.title || "Untitled Note",
-        content: initialContent || "",
+        content: initialContent || {
+          type: "doc",
+          content: [{ type: "paragraph" }],
+        },
       },
     });
 
@@ -233,7 +341,7 @@ Explain the core logic behind this strategy...
 
 export async function updateNote(
   id: string,
-  payload: { title?: string; content?: string },
+  payload: { title?: string; content?: any },
 ) {
   try {
     const userId = await getAuthenticatedUserId();
@@ -244,20 +352,44 @@ export async function updateNote(
 
     if (!existing) throw new Error("Not Found");
 
-    const updated = await prisma.note.update({
-      where: { id },
-      data: {
-        title: payload.title !== undefined ? payload.title : existing.title,
-        content:
-          payload.content !== undefined ? payload.content : existing.content,
-      },
-    });
+    const updateData: { title?: string; content?: any } = {};
+    let contentChanged = false;
+
+    if (payload.title !== undefined && payload.title !== existing.title) {
+      updateData.title = payload.title;
+    }
 
     if (payload.content !== undefined) {
+      const contentJson = JSON.parse(JSON.stringify(payload.content));
+      if (JSON.stringify(contentJson) !== JSON.stringify(existing.content)) {
+        updateData.content = contentJson;
+        contentChanged = true;
+      }
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return { data: existing };
+    }
+
+    const updated = await prisma.note.update({
+      where: { id },
+      data: updateData,
+    });
+
+    if (contentChanged) {
       const links = new Set<string>();
-      const regex = /data-id="([a-zA-Z0-9-]+)"/g;
+      const contentStr =
+        typeof updateData.content === "string"
+          ? updateData.content
+          : JSON.stringify(updateData.content);
+      const regex = /"id":"([a-zA-Z0-9-]+)"/g;
+      const htmlRegex = /data-id="([a-zA-Z0-9-]+)"/g;
+
       let match;
-      while ((match = regex.exec(payload.content)) !== null) {
+      while ((match = regex.exec(contentStr)) !== null) {
+        links.add(match[1]);
+      }
+      while ((match = htmlRegex.exec(contentStr)) !== null) {
         links.add(match[1]);
       }
 
