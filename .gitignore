@@ -48,3 +48,6 @@ next-env.d.ts
 
 # knowns search index (rebuilt on demand)
 .knowns/search-index/
+
+graphify-out/manifest.json
+graphify-out/cost.json
