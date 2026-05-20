@@ -1,42 +1,21 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createSupabaseServerClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-    if (authError || !user) {
+    if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-
-    if (!file) {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 });
-    }
-
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
-    const filePath = `${user.id}/${fileName}`;
-
-    const { data, error } = await supabase.storage
-      .from("knowledge-base-media")
-      .upload(filePath, file);
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    const { data: publicUrlData } = supabase.storage
-      .from("knowledge-base-media")
-      .getPublicUrl(filePath);
-
-    return NextResponse.json({ url: publicUrlData.publicUrl });
+    return NextResponse.json(
+      { error: "Storage not configured" },
+      { status: 501 },
+    );
   } catch (error: any) {
     console.error("Upload error:", error);
     return NextResponse.json(

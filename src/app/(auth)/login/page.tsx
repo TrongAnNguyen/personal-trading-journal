@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -38,7 +38,6 @@ export default function LoginPage() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const supabase = createSupabaseBrowserClient();
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -52,23 +51,22 @@ export default function LoginPage() {
     setError(null);
 
     startTransition(async () => {
-      try {
-        const info = await supabase.auth.signInWithPassword({
-          email: data.email,
-          password: data.password,
-        });
+      const result = await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+        callbackURL: "/dashboard",
+      });
 
-        if (info.error) {
-          throw info.error;
-        }
-
-        router.push("/dashboard");
-        router.refresh();
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to sign in");
+      if (result.error) {
+        setError(result.error.message || "Failed to sign in");
+        return;
       }
+
+      router.push("/dashboard");
+      router.refresh();
     });
   };
+
 
   return (
     <div className="bg-background flex min-h-screen items-center justify-center px-4">

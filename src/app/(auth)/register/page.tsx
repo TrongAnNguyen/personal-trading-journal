@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -32,6 +32,7 @@ const registerSchema = z
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
+    name: z.string().min(2, "Name must be at least 2 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -44,7 +45,6 @@ export default function RegisterPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const supabase = createSupabaseBrowserClient();
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -52,6 +52,7 @@ export default function RegisterPage() {
       email: "",
       password: "",
       confirmPassword: "",
+      name: "",
     },
   });
 
@@ -59,26 +60,23 @@ export default function RegisterPage() {
     setIsLoading(true);
     setError(null);
 
-    try {
-      const { error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          emailRedirectTo: `${location.origin}/auth/callback`,
-        },
-      });
+    const result = await authClient.signUp.email({
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      callbackURL: "/dashboard",
+    });
 
-      if (error) {
-        throw error;
-      }
-
-      router.push("/login?message=Check your email to confirm your account");
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to sign up");
-    } finally {
+    if (result.error) {
+      setError(result.error.message || "Failed to sign up");
       setIsLoading(false);
+      return;
     }
+
+    router.push("/dashboard");
+    router.refresh();
   };
+
 
   return (
     <div className="bg-background flex min-h-screen items-center justify-center px-4">
@@ -99,6 +97,19 @@ export default function RegisterPage() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -110,6 +121,7 @@ export default function RegisterPage() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="password"

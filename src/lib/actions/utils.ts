@@ -1,4 +1,5 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { z } from "zod";
 
 export type ActionResponse<T> =
@@ -6,18 +7,17 @@ export type ActionResponse<T> =
   | { success: false; error: string };
 
 export async function getAuthenticatedUserId(): Promise<string> {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  if (error || !user) {
+  if (!session || !session.user) {
     throw new Error("Unauthorized");
   }
 
-  return user.id;
+  return session.user.id;
 }
+
 
 /**
  * Creates a type-safe server action with optional validation and authentication.

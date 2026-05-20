@@ -2,12 +2,12 @@ This file provides guidance to AI Agent when working with code in this repositor
 
 ## Commands
 
-- `rtk npm run dev` — Start Next.js dev server
-- `rtk npm run build` — Production build
-- `rtk npm run lint` — ESLint
-- `rtk npm run format` — Prettier (entire project)
-- `rtk npm test` — Run all Vitest tests
-- `rtk npm run test:coverage` — Run tests with coverage
+- `rtk pnpm run dev` — Start Next.js dev server
+- `rtk pnpm run build` — Production build
+- `rtk pnpm run lint` — ESLint
+- `rtk pnpm run format` — Prettier (entire project)
+- `rtk pnpm test` — Run all Vitest tests
+- `rtk pnpm run test:coverage` — Run tests with coverage
 - `rtk npx vitest run src/lib/actions/trades.test.ts` — Run a single test file
 - `rtk npx vitest run -t "createTrade"` — Run tests matching a pattern
 - `rtk npx prisma generate` — Regenerate Prisma client after schema changes

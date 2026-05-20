@@ -27,6 +27,7 @@ export function SecuritySettings() {
   const form = useForm<ChangePasswordInput>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
+      currentPassword: "",
       password: "",
       confirmPassword: "",
     },
@@ -69,6 +70,26 @@ export function SecuritySettings() {
           onSubmit={form.handleSubmit(onUpdatePassword)}
           className="max-w-md space-y-4"
         >
+          <FormField
+            control={form.control}
+            name="currentPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xs uppercase">
+                  Current Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="••••••"
+                    {...field}
+                    className="h-11 rounded-none border-white/10 bg-black/40"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="password"

@@ -1,17 +1,19 @@
 "use server";
-
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+ 
+import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { changePasswordSchema } from "@/types/auth";
 import { z } from "zod";
+import { headers } from "next/headers";
 
 export async function signOut() {
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signOut();
-
-  if (error) {
-    return { error: error.message };
+  try {
+    await auth.api.signOut({
+      headers: await headers(),
+    });
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Failed to sign out" };
   }
 
   revalidatePath("/", "layout");
@@ -26,15 +28,17 @@ export async function updatePassword(
     return { error: "Invalid password data" };
   }
 
-  const supabase = await createSupabaseServerClient();
-
-  const { error } = await supabase.auth.updateUser({
-    password: validated.data.password,
-  });
-
-  if (error) {
-    return { error: error.message };
+  try {
+    await auth.api.changePassword({
+      headers: await headers(),
+      body: {
+        currentPassword: validated.data.currentPassword,
+        newPassword: validated.data.password,
+      },
+    });
+    return { success: true };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Failed to update password" };
   }
-
-  return { success: true };
 }
+
