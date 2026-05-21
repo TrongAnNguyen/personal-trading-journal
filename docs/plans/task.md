@@ -1,8 +1,6 @@
 | Task | Status | Notes |
 | :--- | :---: | :--- |
-| 1. Explore project context | [x] | Check package.json, schema.prisma, .env files |
-| 2. Ask clarifying questions | [x] | Clarify requirements for env vars |
-| 3. Propose 2-3 approaches | [x] | Detail approaches to t3-env config |
-| 4. Present design sections | [x] | Present custom configuration structure |
-| 5. Write design doc | [x] | Document setup details in plans folder |
-| 6. Transition to implementation | [x] | Create detailed implementation plan |
+| Task 1: Create Schema and Unit Test | [x] | Create src/env.ts and src/env.test.ts, run tests |
+| Task 2: Validate Schema on Build | [x] | Modify next.config.ts and verify validation on build |
+| Task 3: Refactor Database Configuration | [x] | Update src/lib/db.ts to use env |
+| Task 4: Refactor Redis/KV Client | [x] | Update src/lib/redis.ts to use env |
