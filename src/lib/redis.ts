@@ -1,6 +1,7 @@
+import { env } from "@/env";
 import { reviveDates } from "./utils";
 
-const CLOUDFLARE_KV_WORKER_URL = process.env.CLOUDFLARE_KV_WORKER_URL || "";
+const CLOUDFLARE_KV_WORKER_URL = env.CLOUDFLARE_KV_WORKER_URL;
 
 export const redis = {
   /**
